@@ -1,7 +1,16 @@
 package com.example.octofy;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.JsonReader;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,103 +19,174 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by linneanabo on 2014-12-11.
  */
-public class InteractiveSearcher extends View {
+public class InteractiveSearcher extends RelativeLayout {
 
-    //circle and text colors
-    private int circleCol, labelCol;
-    //label text
-    private String circleText;
-    //paint for drawing custom view
-    private Paint circlePaint;
+    private EditText searchField;
+    private SearchListView searchListView;
+    private int search_id, latestRequestId;
+    ArrayList<String> names;
+
+    Context context;
 
     public InteractiveSearcher(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        //paint object for drawing in onDraw
-        circlePaint = new Paint();
+        this.context = context;
+        names = new ArrayList<String>();
 
-        //get the attributes specified in attrs.xml using the name we included
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.InteractiveSearcher, 0, 0);
+        // initialize search_id
+        search_id = 0;
+        // check that request and answer id are the same
+        latestRequestId = 0;
 
-        try {
-            //get the text and colors specified using the names in attrs.xml
-            circleText = a.getString(R.styleable.InteractiveSearcher_InteractiveSearcherCircleLabel);
-            circleCol = a.getInteger(R.styleable.InteractiveSearcher_InteractiveSearcherCircleColor, 0);//0 is default
-            labelCol = a.getInteger(R.styleable.InteractiveSearcher_InteractiveSearcherLabelColor, 0);
-        } finally {
-            a.recycle();
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.interactive_searcher, this, true);
+
+
+        searchField = (EditText) findViewById(R.id.search_field);
+        searchListView = (SearchListView) findViewById(R.id.search_list);
+
+        // listen for changes in search field
+        searchField.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+
+				/* use AsyncTask, otherwise error NetworkOnMainThreadException when trying to connect to URL on main thread
+				 * Example taken from here: http://developer.android.com/training/basics/network-ops/connecting.html:
+				 * Class: DownloadWebpage
+				 * Functions: downloadUrl, readIt
+				 * */
+
+                String url = "http://flask-afteach.rhcloud.com/getnames/"+ Integer.toString(search_id) + "/" + arg0.toString();
+
+                // check if there is network connection
+                ConnectivityManager connMgr = (ConnectivityManager)
+                        getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                if(networkInfo != null && networkInfo.isConnected()) {
+                    new DownloadWebpage().execute(url);
+                } else {
+                    Log.d("test", "No network connection available.");
+                }
+
+                // set latest request
+                latestRequestId = search_id;
+
+                // put the names in the list of the dropdown view
+                searchListView.setNames(names);
+                searchListView.updateList();
+                names.clear();
+
+                // increase search id in order to be unique for each search made
+                search_id++;
+
+            }
+
+        });
+    }
+
+    private class DownloadWebpage extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                return downloadUrl(urls[0]);
+            } catch (IOException e) {
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            Log.d("test","Result: " + result);
         }
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        //draw the View
+    private String downloadUrl(String myurl) throws IOException {
+        InputStream is = null;
 
-        //get half of the width and height as we are working with a circle
-        int viewWidthHalf = this.getMeasuredWidth()/2;
-        int viewHeightHalf = this.getMeasuredHeight()/2;
+        try {
+            URL url = new URL(myurl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(10000 /* milliseconds */);
+            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            conn.connect();
+            int response = conn.getResponseCode();
+            Log.d("test", "Response code: " + response);
+            is = conn.getInputStream();
 
-        //get the radius as half of the width or height, whichever is smaller
-        //subtract ten so that it has some space around it
-        int radius = 0;
-        if(viewWidthHalf>viewHeightHalf)
-            radius=viewHeightHalf-10;
-        else
-            radius=viewWidthHalf-10;
+            // Convert the InputStream into a string
+            String contentAsString = readIt(is);
+            return contentAsString;
 
-        circlePaint.setStyle(Style.FILL);
-        circlePaint.setAntiAlias(true);
-
-        //set the paint color using the circle color specified
-        circlePaint.setColor(circleCol);
-
-        canvas.drawCircle(viewWidthHalf, viewHeightHalf, radius, circlePaint);
-        //set the text color using the color specified
-        circlePaint.setColor(labelCol);
-        //set text properties
-        circlePaint.setTextAlign(Paint.Align.CENTER);
-        circlePaint.setTextSize(50);
-        //draw the text using the string attribute and chosen properties
-        canvas.drawText(circleText, viewWidthHalf, viewHeightHalf, circlePaint);
+            // Makes sure that the InputStream is closed after the app is finished using it.
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
     }
 
-    public int getCircleColor(){
-        return circleCol;
-    }
+    // adapt to JSON object?
+    public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
 
-    public int getLabelColor(){
-        return labelCol;
-    }
+        String toReturn = "";
 
-    public String getLabelText(){
-        return circleText;
-    }
+        Reader reader = null;
+        reader = new InputStreamReader(stream, "UTF-8");
 
-    public void setCircleColor(int newColor){
-        //update the instance variable
-        circleCol=newColor;
-        //redraw the view (will make onDraw() run again)
-        invalidate();
-        requestLayout();
-    }
-    public void setLabelColor(int newColor){
-        //update the instance variable
-        labelCol=newColor;
-        //redraw the view
-        invalidate();
-        requestLayout();
-    }
+        JsonReader jsonReader = new JsonReader(reader);
+        jsonReader.beginObject();
 
-    public void setLabelText(String newLabel){
-        //update the instance variable
-        circleText=newLabel;
-        //redraw the view
-        invalidate();
-        requestLayout();
+        jsonReader.nextName();
+        String search_id = jsonReader.nextString();
+
+        // if the returned is not the same as requested, return nothing
+        if (Integer.parseInt(search_id) != latestRequestId) {
+            return "";
+        }
+
+        jsonReader.nextName();
+        toReturn = toReturn + "search id: " + search_id + ", names: ";
+
+        jsonReader.beginArray();
+
+        while(jsonReader.hasNext()) {
+            //toReturn = toReturn + jsonReader.nextString() + ",";
+            names.add(jsonReader.nextString());
+        }
+
+        jsonReader.endArray();
+        jsonReader.endObject();
+        jsonReader.close();
+
+        return toReturn;
     }
 }
