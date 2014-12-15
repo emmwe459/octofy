@@ -10,11 +10,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
 
 /**
- * Created by linneanabo on 2014-12-11.
+ * Created by emmawegelid on 2014-12-12.
  */
-public class InteractiveSearcher extends View {
+public class CarouselView_old extends View {
 
     //circle and text colors
     private int circleCol, labelCol;
@@ -23,7 +24,7 @@ public class InteractiveSearcher extends View {
     //paint for drawing custom view
     private Paint circlePaint;
 
-    public InteractiveSearcher(Context context, AttributeSet attrs) {
+    public CarouselView_old(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         //paint object for drawing in onDraw
@@ -31,13 +32,13 @@ public class InteractiveSearcher extends View {
 
         //get the attributes specified in attrs.xml using the name we included
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.InteractiveSearcher, 0, 0);
+                R.styleable.CarouselView, 0, 0);
 
         try {
             //get the text and colors specified using the names in attrs.xml
-            circleText = a.getString(R.styleable.InteractiveSearcher_InteractiveSearcherCircleLabel);
-            circleCol = a.getInteger(R.styleable.InteractiveSearcher_InteractiveSearcherCircleColor, 0);//0 is default
-            labelCol = a.getInteger(R.styleable.InteractiveSearcher_InteractiveSearcherLabelColor, 0);
+            circleText = a.getString(R.styleable.CarouselView_CarouselCircleLabel);
+            circleCol = a.getInteger(R.styleable.CarouselView_CarouselCircleColor, 0);//0 is default
+            labelCol = a.getInteger(R.styleable.CarouselView_CarouselLabelColor, 0);
         } finally {
             a.recycle();
         }
@@ -54,10 +55,10 @@ public class InteractiveSearcher extends View {
         //get the radius as half of the width or height, whichever is smaller
         //subtract ten so that it has some space around it
         int radius = 0;
-        if(viewWidthHalf>viewHeightHalf)
-            radius=viewHeightHalf-10;
+        if(viewWidthHalf > viewHeightHalf)
+            radius = viewHeightHalf - 10;
         else
-            radius=viewWidthHalf-10;
+            radius = viewWidthHalf - 10;
 
         circlePaint.setStyle(Style.FILL);
         circlePaint.setAntiAlias(true);
@@ -89,14 +90,14 @@ public class InteractiveSearcher extends View {
 
     public void setCircleColor(int newColor){
         //update the instance variable
-        circleCol=newColor;
+        circleCol = newColor;
         //redraw the view (will make onDraw() run again)
         invalidate();
         requestLayout();
     }
     public void setLabelColor(int newColor){
         //update the instance variable
-        labelCol=newColor;
+        labelCol = newColor;
         //redraw the view
         invalidate();
         requestLayout();
@@ -104,7 +105,7 @@ public class InteractiveSearcher extends View {
 
     public void setLabelText(String newLabel){
         //update the instance variable
-        circleText=newLabel;
+        circleText = newLabel;
         //redraw the view
         invalidate();
         requestLayout();

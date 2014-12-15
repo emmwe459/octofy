@@ -4,15 +4,20 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
+              
+    <EditText
+        android:id="@+id/searchField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/hello_world" />
 
     <com.example.octofy.InteractiveSearcher
             android:id="@+id/interactive"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_margin="5dp"
-            custom:circleColor="#ff0099"
-            custom:circleLabel="Hello"
-            custom:labelColor="#ffff66" />
+            custom:InteractiveSearcherCircleColor="#ff0099"
+            custom:InteractiveSearcherCircleLabel="Hello"
+            custom:InteractiveSearcherLabelColor="#ffff66" />
 
 </LinearLayout>
-
