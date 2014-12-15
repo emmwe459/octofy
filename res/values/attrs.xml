@@ -7,4 +7,13 @@
         <attr name="circleLabel" format="string"/>>
         <attr name="labelColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="TagCloudView">
+        <attr name="cloudTitleText" format="string" localization="suggested" />
+        <attr name="cloudValueColor" format="color" />
+        <attr name="cloudCircleColor" format="color" />
+        <attr name="cloudCircleLabel" format="string"/>>
+        <attr name="cloudLabelColor" format="color"/>
+    </declare-styleable>
+
 </resources>
