@@ -18,14 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-    <com.example.octofy.TagCloudView
+    <com.example.octofy.TagCloud
             android:id="@+id/tagcloud"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            custom:cloudCircleLabel="Hello"
-            custom:cloudCircleColor="#ff0099"
-            android:layout_margin="5dp"/>
-
+            android:layout_height="fill_parent"/>
 
 
 </RelativeLayout>
