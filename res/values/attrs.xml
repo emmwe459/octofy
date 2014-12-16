@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CarouselView">
-        <attr name="CarouselTitleText" format="string" localization="suggested" />
-        <attr name="CarouselValueColor" format="color" />
-        <attr name="CarouselCircleColor" format="color" />
-        <attr name="CarouselCircleLabel" format="string"/>
-        <attr name="CarouselLabelColor" format="color"/>
-    </declare-styleable>
     
     <declare-styleable name="InteractiveSearcher">
         <attr name="InteractiveSearcherTitleText" format="string" localization="suggested" />

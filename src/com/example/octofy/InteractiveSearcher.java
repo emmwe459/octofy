@@ -4,22 +4,14 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Paint.Style;
-import android.util.AttributeSet;
-import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import java.io.*;
@@ -28,15 +20,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by linneanabo on 2014-12-11.
- */
+
 public class InteractiveSearcher extends RelativeLayout {
 
     private EditText searchField;
-    private SearchListView searchListView;
+    private ListView resultList;
     private int search_id, latestRequestId;
     ArrayList<String> names;
+    ResultAdapter resultAdapter;
 
     Context context;
 
@@ -57,7 +48,10 @@ public class InteractiveSearcher extends RelativeLayout {
 
 
         searchField = (EditText) findViewById(R.id.search_field);
-        searchListView = (SearchListView) findViewById(R.id.search_list);
+
+        resultList = (ListView) findViewById(R.id.result_list);
+        resultAdapter = new ResultAdapter(context, R.layout.result_row);
+        resultList.setAdapter(resultAdapter);
 
         // listen for changes in search field
         searchField.addTextChangedListener(new TextWatcher() {
@@ -95,11 +89,9 @@ public class InteractiveSearcher extends RelativeLayout {
 
                 // set latest request
                 latestRequestId = search_id;
-
-                // put the names in the list of the dropdown view
-                searchListView.setNames(names);
-                searchListView.updateList();
-                names.clear();
+                //names.add("new word");
+                //resultAdapter.updateData(names);
+                //resultList.setAdapter(resultAdapter);
 
                 // increase search id in order to be unique for each search made
                 search_id++;
@@ -123,12 +115,14 @@ public class InteractiveSearcher extends RelativeLayout {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Log.d("test","Result: " + result);
+            //Log.d("test","Result: " + result);
         }
     }
 
     private String downloadUrl(String myurl) throws IOException {
         InputStream is = null;
+
+        Log.d("test" , " *** download url " + myurl);
 
         try {
             URL url = new URL(myurl);
@@ -141,6 +135,7 @@ public class InteractiveSearcher extends RelativeLayout {
             int response = conn.getResponseCode();
             Log.d("test", "Response code: " + response);
             is = conn.getInputStream();
+            Log.d("test", "is.tostring  " + is.toString());
 
             // Convert the InputStream into a string
             String contentAsString = readIt(is);
@@ -163,7 +158,9 @@ public class InteractiveSearcher extends RelativeLayout {
         reader = new InputStreamReader(stream, "UTF-8");
 
         JsonReader jsonReader = new JsonReader(reader);
+        Log.d("test", "before begin object " + jsonReader.toString());
         jsonReader.beginObject();
+        Log.d("test", "after begin object");
 
         jsonReader.nextName();
         String search_id = jsonReader.nextString();
@@ -179,10 +176,11 @@ public class InteractiveSearcher extends RelativeLayout {
         jsonReader.beginArray();
 
         while(jsonReader.hasNext()) {
-            //toReturn = toReturn + jsonReader.nextString() + ",";
+            toReturn = toReturn + jsonReader.nextString() + ",";
             names.add(jsonReader.nextString());
         }
 
+        Log.d("test", toReturn);
         jsonReader.endArray();
         jsonReader.endObject();
         jsonReader.close();
