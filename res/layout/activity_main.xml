@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res/com.example.octofy"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,14 +9,20 @@
     tools:context=".MainActivity" >
 
     <TextView
+        android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="header text"/>
+        android:text="Name searcher"/>
 
     <com.example.octofy.InteractiveSearcher
             android:id="@+id/interactive"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_margin="5dp"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/header"/>
+
+    <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
+              android:layout_below="@id/interactive"
+            android:text="I am a perfectly good text and I dont wanna have to move for some stupid search result! Use popupwindow or something!"/>
 
 </RelativeLayout>

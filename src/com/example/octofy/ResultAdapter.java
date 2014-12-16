@@ -17,34 +17,37 @@ public class ResultAdapter extends ArrayAdapter<String> {
 
     Context context;
     ArrayList<String> data;
+    InteractiveSearcher is;
 
-    public ResultAdapter(Context context, int resource) {
+    public ResultAdapter(Context context, int resource, InteractiveSearcher is) {
         super(context, resource);
         this.context = context;
+        this.is = is;
         data = new ArrayList<String>();
-        data.add("1");
-        data.add("2");
-        data.add("3");
-        data.add("4");
-        data.add("5");
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        //Log.d("test", "******* inside getview");
+    public View getView(final int position, View convertView, final ViewGroup parent) {
+
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row= inflater.inflate(R.layout.result_row, parent, false);
-        TextView textView = (TextView) row.findViewById(R.id.row);
 
-        textView.setText(data.get(position));
+        RowView rowView = (RowView) row.findViewById(R.id.row);
+        rowView.setText(data.get(position));
+
+        row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                is.updateSearchField(data.get(position));
+            }
+        });
 
         return row;
     }
 
     @Override
     public int getCount() {
-        //Log.d("test", String.valueOf(data.size()));
         return data.size();
     }
 
@@ -59,7 +62,6 @@ public class ResultAdapter extends ArrayAdapter<String> {
     }
 
     public void updateData(ArrayList<String> data) {
-        Log.d("test", " *** In update data");
         this.data = data;
     }
 }

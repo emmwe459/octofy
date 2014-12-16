@@ -8,4 +8,10 @@
         <attr name="InteractiveSearcherCircleLabel" format="string"/>
         <attr name="InteractiveSearcherLabelColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="RowView">
+        <attr name="RowText" format="string" localization="suggested" />
+        <attr name="RowColor" format="color" />
+    </declare-styleable>
+
 </resources>

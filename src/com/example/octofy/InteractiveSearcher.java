@@ -11,6 +11,7 @@ import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.EditText;
+import android.widget.ListPopupWindow;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -23,11 +24,12 @@ import java.util.List;
 
 public class InteractiveSearcher extends RelativeLayout {
 
-    private EditText searchField;
-    private ListView resultList;
+    public EditText searchField;
+    private ListPopupWindow resultList;
     private int search_id, latestRequestId;
     ArrayList<String> names;
     ResultAdapter resultAdapter;
+    int rowLimit = 10; //default
 
     Context context;
 
@@ -49,9 +51,13 @@ public class InteractiveSearcher extends RelativeLayout {
 
         searchField = (EditText) findViewById(R.id.search_field);
 
-        resultList = (ListView) findViewById(R.id.result_list);
-        resultAdapter = new ResultAdapter(context, R.layout.result_row);
+        resultList = new ListPopupWindow(context);
+        resultAdapter = new ResultAdapter(context, R.layout.result_row, this);
         resultList.setAdapter(resultAdapter);
+        resultList.setAnchorView(searchField);
+        resultList.setWidth(300);
+        resultList.setHeight(400);
+        resultList.setModal(false);
 
         // listen for changes in search field
         searchField.addTextChangedListener(new TextWatcher() {
@@ -69,6 +75,12 @@ public class InteractiveSearcher extends RelativeLayout {
             public void onTextChanged(CharSequence arg0, int arg1, int arg2,
                                       int arg3) {
 
+                names.clear();
+                if (arg0.length() == 0) {
+                    resultList.dismiss();
+                } else if (!resultList.isShowing()) {
+                    resultList.show();
+                }
 				/* use AsyncTask, otherwise error NetworkOnMainThreadException when trying to connect to URL on main thread
 				 * Example taken from here: http://developer.android.com/training/basics/network-ops/connecting.html:
 				 * Class: DownloadWebpage
@@ -89,15 +101,11 @@ public class InteractiveSearcher extends RelativeLayout {
 
                 // set latest request
                 latestRequestId = search_id;
-                //names.add("new word");
-                //resultAdapter.updateData(names);
-                //resultList.setAdapter(resultAdapter);
 
                 // increase search id in order to be unique for each search made
                 search_id++;
 
             }
-
         });
     }
 
@@ -116,13 +124,17 @@ public class InteractiveSearcher extends RelativeLayout {
         @Override
         protected void onPostExecute(String result) {
             //Log.d("test","Result: " + result);
+            resultAdapter.updateData(names);
+            resultList.setAdapter(resultAdapter);
+            if(!names.isEmpty()) {
+                resultList.show();
+                searchField.requestFocus();
+            }
         }
     }
 
     private String downloadUrl(String myurl) throws IOException {
         InputStream is = null;
-
-        Log.d("test" , " *** download url " + myurl);
 
         try {
             URL url = new URL(myurl);
@@ -133,9 +145,8 @@ public class InteractiveSearcher extends RelativeLayout {
             conn.setDoInput(true);
             conn.connect();
             int response = conn.getResponseCode();
-            Log.d("test", "Response code: " + response);
+            //Log.d("test", "Response code: " + response);
             is = conn.getInputStream();
-            Log.d("test", "is.tostring  " + is.toString());
 
             // Convert the InputStream into a string
             String contentAsString = readIt(is);
@@ -153,38 +164,63 @@ public class InteractiveSearcher extends RelativeLayout {
     public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
 
         String toReturn = "";
+        names.clear();
 
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
 
-        JsonReader jsonReader = new JsonReader(reader);
-        Log.d("test", "before begin object " + jsonReader.toString());
-        jsonReader.beginObject();
-        Log.d("test", "after begin object");
+        /*
+        char[] buffer = new char[1000];
+        reader.read(buffer);
+        String s = new String(buffer);
+        Log.d("test", s);
+        */
 
-        jsonReader.nextName();
-        String search_id = jsonReader.nextString();
+        try {
+            JsonReader jsonReader = new JsonReader(reader);
+            jsonReader.beginObject();
 
-        // if the returned is not the same as requested, return nothing
-        if (Integer.parseInt(search_id) != latestRequestId) {
-            return "";
+            jsonReader.nextName();
+            String search_id = jsonReader.nextString();
+
+            // if the returned is not the same as requested, return nothing
+            if (Integer.parseInt(search_id) != latestRequestId) {
+                return "";
+            }
+
+            jsonReader.nextName();
+            toReturn = toReturn + "search id: " + search_id + ", names: ";
+
+            jsonReader.beginArray();
+
+            int i = 0;
+            while(jsonReader.hasNext()) {
+                if(i < rowLimit) {
+                    names.add(jsonReader.nextString());
+                    i++;
+                } else {
+                    jsonReader.nextString();
+                }
+            }
+
+            jsonReader.endArray();
+            jsonReader.endObject();
+            jsonReader.close();
+
+            return toReturn;
+
+        } catch(IOException e) {
+            Log.d("test", e.getMessage());
         }
+        return "";
+    }
 
-        jsonReader.nextName();
-        toReturn = toReturn + "search id: " + search_id + ", names: ";
+    public void setRowLimit (int n) {
+        this.rowLimit = n;
+    }
 
-        jsonReader.beginArray();
-
-        while(jsonReader.hasNext()) {
-            toReturn = toReturn + jsonReader.nextString() + ",";
-            names.add(jsonReader.nextString());
-        }
-
-        Log.d("test", toReturn);
-        jsonReader.endArray();
-        jsonReader.endObject();
-        jsonReader.close();
-
-        return toReturn;
+    public void updateSearchField (String s) {
+        searchField.setText(s);
+        searchField.setSelection(s.length());
     }
 }

@@ -3,11 +3,10 @@ package com.example.octofy;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.widget.ListPopupWindow;
 
 public class MainActivity extends Activity {
 	
-	//private EditText searchField;
-	//private int search_id, latestRequestId;
     InteractiveSearcher interactiveSearcher;
 
     @Override
@@ -16,6 +15,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         interactiveSearcher = (InteractiveSearcher) findViewById(R.id.interactive);
+        interactiveSearcher.setRowLimit(7);
     }
 
     @Override
