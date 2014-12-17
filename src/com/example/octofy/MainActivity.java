@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carousel);
         
-        numOfImagesToShow = 4;
+        numOfImagesToShow = 8;
         
         /*listview = (ListView) findViewById(R.id.listview);
         carouselAdapter = new CarouselAdapter(this.getBaseContext());

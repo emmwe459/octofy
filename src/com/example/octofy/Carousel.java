@@ -33,8 +33,6 @@ public class Carousel extends AdapterView<Adapter> {
 	private int displayOffset;
 	private int maxX;
 	
-	private boolean dataChanged;
-	
 	private Queue<View> removedViewQueue = new LinkedList<View>();
 
 	public Carousel(Context context, AttributeSet attrs) {
@@ -51,26 +49,6 @@ public class Carousel extends AdapterView<Adapter> {
 		currentX = 0;
 		maxX = Integer.MAX_VALUE;
 	}
-	
-	private DataSetObserver dataObserver = new DataSetObserver() {
-
-		@Override
-		public void onChanged() {
-			synchronized(Carousel.this){
-				dataChanged = true;
-			}
-			invalidate();
-			requestLayout();
-		}
-
-		@Override
-		public void onInvalidated() {
-			reset();
-			invalidate();
-			requestLayout();
-		}
-		
-	};
 	
 	private synchronized void reset(){
 		initView();
@@ -94,12 +72,7 @@ public class Carousel extends AdapterView<Adapter> {
 
 	@Override
 	public void setAdapter(Adapter adapter) {
-		if(carouselAdapter!=null) {
-			carouselAdapter.unregisterDataSetObserver(dataObserver);
-		}
 		carouselAdapter = adapter;
-		carouselAdapter.registerDataSetObserver(dataObserver);
-        reset();
 	}
 	
 	public int getNumOfImagesToShow() {
@@ -114,27 +87,19 @@ public class Carousel extends AdapterView<Adapter> {
 	protected synchronized void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		
-		Log.d("test","inside onlayout");
+		Log.d("test","rightViewIndex: " + rightViewIndex);
 		
 		if(carouselAdapter == null) {
 			return;
 		}
 		
-		if(dataChanged){
-			int oldCurrentX = currentX;
-			initView();
-			removeAllViewsInLayout();
-			nextX = oldCurrentX;
-			dataChanged = false;
-		}
-		
-		if(nextX <= 0){
+		/*if(nextX <= 0){
 			nextX = 0;
 		}
 		
 		if(nextX >= maxX) {
 			nextX = maxX;
-		}
+		}*/
 		
 		int dx = currentX - nextX;
 		
@@ -143,7 +108,7 @@ public class Carousel extends AdapterView<Adapter> {
 		
 		positionItems(dx);
 		
-		//currentX = nextX;
+		currentX = nextX;
 		
 		/*left = 0;
 		
@@ -169,7 +134,8 @@ public class Carousel extends AdapterView<Adapter> {
 		int edge = 0;
 		View child = getChildAt(getChildCount()-1);
 		if(child != null) {
-			edge = child.getLeft();
+			edge = child.getRight();
+			Log.d("test","edge right: " + edge);
 		}
 		fillListRight(edge, dx);
 		
@@ -177,6 +143,7 @@ public class Carousel extends AdapterView<Adapter> {
 		child = getChildAt(0);
 		if(child != null) {
 			edge = child.getLeft();
+			Log.d("test","edge left: " + edge);
 		}
 		fillListLeft(edge, dx);
 	}
@@ -237,8 +204,16 @@ public class Carousel extends AdapterView<Adapter> {
 		}
 
 		addViewInLayout(child, viewPos, params, true);
-		child.measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.AT_MOST),
-				MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
+		
+		child.measure(0, 0);
+		
+		int w = child.getMeasuredWidth();
+		int h = child.getMeasuredHeight();
+		int forcedWidth = screenWidth/numOfImagesToShow;
+		double ratio = (double) forcedWidth / (double) w;
+		
+		child.measure(MeasureSpec.makeMeasureSpec(forcedWidth, MeasureSpec.AT_MOST),
+				MeasureSpec.makeMeasureSpec((int) (h*ratio), MeasureSpec.AT_MOST));
 	}
 	 
 	private void removeNonVisibleItems(final int dx) {
