@@ -33,6 +33,8 @@ public class Carousel extends AdapterView<Adapter> {
 	private int displayOffset;
 	private int maxX;
 	
+	boolean dataChanged;
+	
 	private Queue<View> removedViewQueue = new LinkedList<View>();
 
 	public Carousel(Context context, AttributeSet attrs) {
@@ -41,6 +43,26 @@ public class Carousel extends AdapterView<Adapter> {
 		screenWidth = metrics.widthPixels;
 		initView();
 	}
+	
+	private DataSetObserver dataObserver = new DataSetObserver() {		
+				
+				@Override		
+				public void onChanged() {		
+					synchronized(Carousel.this){		
+						dataChanged = true;		
+					}		
+					invalidate();		
+					requestLayout();		
+				}		
+				
+				@Override		
+				public void onInvalidated() {		
+					reset();		
+					invalidate();		
+					requestLayout();		
+				}		
+						
+			};
 	
 	private synchronized void initView() {
 		leftViewIndex = -1;
@@ -72,7 +94,12 @@ public class Carousel extends AdapterView<Adapter> {
 
 	@Override
 	public void setAdapter(Adapter adapter) {
+		if(carouselAdapter != null) {
+			carouselAdapter.unregisterDataSetObserver(dataObserver);
+		}
 		carouselAdapter = adapter;
+		carouselAdapter.registerDataSetObserver(dataObserver);
+		reset();
 	}
 	
 	public int getNumOfImagesToShow() {

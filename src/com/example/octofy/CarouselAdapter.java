@@ -73,7 +73,11 @@ public class CarouselAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-        return tags.length;
+        return subTags.length;
+	}
+	
+	public int getTotLength() {
+		return tags.length;
 	}
 
 	@Override
@@ -118,7 +122,7 @@ public class CarouselAdapter extends BaseAdapter {
     }
 
     private void setSubs() {
-        if(firstIndex+numOfImagesToShow < tags.length) {
+        if(firstIndex >= 0 && firstIndex+numOfImagesToShow <= tags.length) {
             subTags = Arrays.copyOfRange(tags, firstIndex, firstIndex + numOfImagesToShow);
             subPaths = Arrays.copyOfRange(img_paths, firstIndex, firstIndex + numOfImagesToShow);
             subCount = Arrays.copyOfRange(counts, firstIndex, firstIndex + numOfImagesToShow);

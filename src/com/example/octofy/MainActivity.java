@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 	private Button button_right;
 	private int numOfImagesToShow;
 	private CarouselAdapter carouselAdapter;
-	private int rightIndex, leftIndex;
+	private int index;
 	private ListView listview;
 
     @Override
@@ -43,41 +43,35 @@ public class MainActivity extends Activity {
         carousel.setNumOfImagesToShow(numOfImagesToShow);
         carousel.setAdapter(carouselAdapter);
         
-        rightIndex = carousel.rightViewIndex;
-        leftIndex = carousel.leftViewIndex;
-        
-        Log.d("test","screen width: " + carousel.screenWidth);
-        
-        Log.d("test","right: " + rightIndex + ", left: " + leftIndex);
+        index = 0;
         
         button_left = (Button) findViewById(R.id.goLeft);
+        button_left.setEnabled(false);
         button_right = (Button) findViewById(R.id.goRight);
         
         button_left.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-
-                carouselAdapter.stepLeft();
-                carousel.setAdapter(carouselAdapter);
 				
-				if(leftIndex >= 0) {
-					rightIndex--;
-					leftIndex--;
+				index--;
+				
+				if(index >= 0 && index <= carouselAdapter.getTotLength() - numOfImagesToShow) {
 					
-					if(leftIndex < 0) {
-						button_left.setBackgroundResource(R.drawable.left_arrow_disabled);
-						button_left.setEnabled(false);
-					}
-					
-					if(rightIndex < carouselAdapter.getCount()) {
-						button_right.setBackgroundResource(R.drawable.right_arrow);
+					if(index == carouselAdapter.getTotLength() - numOfImagesToShow - 1) {
 						button_right.setEnabled(true);
+						button_right.setBackgroundResource(R.drawable.right_arrow);
 					}
 					
-					//carousel.requestLayout();
+					carouselAdapter.stepLeft();
+					carousel.setAdapter(carouselAdapter);
+					
+					if(index == 0) {
+						button_left.setEnabled(false);
+						button_left.setBackgroundResource(R.drawable.left_arrow_disabled);
+					}
+					
 				}
-	
 				
 			}
 		});
@@ -86,27 +80,26 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-
-                carouselAdapter.stepRight();
-                carousel.setAdapter(carouselAdapter);
-
-
-				if(rightIndex < carouselAdapter.getCount()-1) {
-					rightIndex++;
-					leftIndex++;
+				
+				index++;
+				
+				if(index >= 0 && index <= carouselAdapter.getTotLength() - numOfImagesToShow) {
 					
-					if(rightIndex >= carouselAdapter.getCount()-1) {
-						button_right.setBackgroundResource(R.drawable.right_arrow_disabled);
-						button_right.setEnabled(false);
-					}
-					
-					if(leftIndex >= 0) {
-						button_left.setBackgroundResource(R.drawable.left_arrow);
+					if(index == 1) {
 						button_left.setEnabled(true);
+						button_left.setBackgroundResource(R.drawable.left_arrow);
 					}
 					
-					//carousel.setAdapter(carouselAdapter);//requestLayout();
+					carouselAdapter.stepRight();
+					carousel.setAdapter(carouselAdapter);
+					
+					if(index == carouselAdapter.getTotLength() - numOfImagesToShow) {
+						button_right.setEnabled(false);
+						button_right.setBackgroundResource(R.drawable.right_arrow_disabled);						
+					}
+					
 				}
+				
 			}
 		});
     }
