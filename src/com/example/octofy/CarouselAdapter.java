@@ -1,7 +1,6 @@
 package com.example.octofy;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Arrays;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -25,7 +24,13 @@ public class CarouselAdapter extends BaseAdapter {
 	}
 
 	private void init() {
+		
 		tags = new String[]{
+				"Blue",
+		    	"Green",
+		    	"Yellow",
+		    	"Purple",
+		    	"Pink",
 				"Blue",
 		    	"Green",
 		    	"Yellow",
@@ -37,9 +42,19 @@ public class CarouselAdapter extends BaseAdapter {
 				"sea_star1_green",
 				"sea_star1_yellow",
 				"sea_star1_purple",
+				"sea_star1_pink",
+				"sea_star1_blue",
+				"sea_star1_green",
+				"sea_star1_yellow",
+				"sea_star1_purple",
 				"sea_star1_pink" };
 		
 		counts = new int[]{
+				0,
+				0,
+				0,
+				0,
+				0,
 				0,
 				0,
 				0,
@@ -64,8 +79,8 @@ public class CarouselAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
-		Log.d("test","inside getview");
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.carousel_item, null);
+		//Log.d("test","child pos: " + position);
+		View view = LayoutInflater.from(_context).inflate(R.layout.carousel_item, null);
         Resources resources = parent.getContext().getResources();
         final int resourceId = resources.getIdentifier(img_paths[position], "drawable", 
            parent.getContext().getPackageName());
@@ -77,7 +92,7 @@ public class CarouselAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				// Increase count for tag
 				counts[position]++;
-				Toast toast = Toast.makeText(parent.getContext(), "Color " + tags[position].toLowerCase() + " has " + Integer.toString(counts[position]) + " votes!", Toast.LENGTH_SHORT);
+				Toast toast = Toast.makeText(parent.getContext(), "Color " + tags[position] + " has " + Integer.toString(counts[position]) + " votes!", Toast.LENGTH_SHORT);
 				toast.show();
 			}
 			

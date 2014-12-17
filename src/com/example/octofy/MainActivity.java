@@ -1,5 +1,7 @@
 package com.example.octofy;
 
+import java.util.Arrays;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.res.Resources;
@@ -9,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,15 +21,34 @@ public class MainActivity extends Activity {
 	private Carousel carousel;
 	private Button button_left;
 	private Button button_right;
+	private int numOfImagesToShow;
+	private CarouselAdapter carouselAdapter;
+	private int rightIndex, leftIndex;
+	private ListView listview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carousel);
+        
+        numOfImagesToShow = 4;
+        
+        /*listview = (ListView) findViewById(R.id.listview);
+        carouselAdapter = new CarouselAdapter(this.getBaseContext());
+        listview.setAdapter(carouselAdapter);*/
+        
+        carouselAdapter = new CarouselAdapter(this.getBaseContext());
                 
         carousel = (Carousel)findViewById(R.id.carousel);
-        carousel.setAdapter(adapter);
-        carousel.setNumOfImagesToShow(4);
+        carousel.setNumOfImagesToShow(numOfImagesToShow);
+        carousel.setAdapter(carouselAdapter);
+        
+        rightIndex = carousel.rightViewIndex;
+        leftIndex = carousel.leftViewIndex;
+        
+        Log.d("test","screen width: " + carousel.screenWidth);
+        
+        Log.d("test","right: " + rightIndex + ", left: " + leftIndex);
         
         button_left = (Button) findViewById(R.id.goLeft);
         button_right = (Button) findViewById(R.id.goRight);
@@ -34,7 +57,25 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Log.d("test","button left clicked");
+				
+				if(leftIndex >= 0) {
+					rightIndex--;
+					leftIndex--;
+					
+					if(leftIndex < 0) {
+						button_left.setBackgroundResource(R.drawable.left_arrow_disabled);
+						button_left.setEnabled(false);
+					}
+					
+					if(rightIndex < carouselAdapter.getCount()) {
+						button_right.setBackgroundResource(R.drawable.right_arrow);
+						button_right.setEnabled(true);
+					}
+					
+					carousel.requestLayout();
+				}
+	
+				
 			}
 		});
         
@@ -42,48 +83,28 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Log.d("test","button right clicked");
+				
+				if(rightIndex < carouselAdapter.getCount()-1) {
+					rightIndex++;
+					leftIndex++;
+					
+					if(rightIndex >= carouselAdapter.getCount()-1) {
+						button_right.setBackgroundResource(R.drawable.right_arrow_disabled);
+						button_right.setEnabled(false);
+					}
+					
+					if(leftIndex >= 0) {
+						button_left.setBackgroundResource(R.drawable.left_arrow);
+						button_left.setEnabled(true);
+					}
+					
+					carousel.requestLayout();
+				}
 			}
 		});
     }
     
-    private static String[] colors = new String[]{
-    	"Blue",
-    	"Green",
-    	"Yellow",
-    	"Purple",
-    	"Pink",
-    	"Blue",
-    	"Green",
-    	"Yellow",
-    	"Purple",
-    	"Pink" };
-    
-    private static String[] img_paths = new String[]{
-    	"sea_star1_blue",
-    	"sea_star1_green",
-    	"sea_star1_yellow",
-    	"sea_star1_purple",
-    	"sea_star1_pink",
-    	"sea_star1_blue",
-    	"sea_star1_green",
-    	"sea_star1_yellow",
-    	"sea_star1_purple",
-    	"sea_star1_pink" };
-    
-    private int[] numOfClicks = new int[]{
-    		0,
-    		0,
-    		0,
-    		0,
-    		0,
-    		0,
-    		0,
-    		0,
-    		0,
-    		0 };
-    
-    private BaseAdapter adapter = new BaseAdapter() {
+    /*private BaseAdapter adapter = new BaseAdapter() {
  
         @Override
         public int getCount() {
@@ -128,5 +149,5 @@ public class MainActivity extends Activity {
             return view;
         }
         
-    };
+    };*/
 }
