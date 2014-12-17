@@ -2,12 +2,15 @@ package com.example.octofy;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +18,8 @@ public class TagCloud extends LinearLayout{
 
     HashMap<String, Integer> data;
     Context context;
-    int wordsPerRow = 3; // default
+    int maxFontSize = 30; // default
+    int minFontSize = 6; // default
 
     public TagCloud(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -27,64 +31,100 @@ public class TagCloud extends LinearLayout{
         setOrientation(LinearLayout.VERTICAL);
     }
 
-    public void updateText() {
+    public void updateTags() {
 
         // TODO check if empty
 
         String out;
-        int size;
-        int rowWidth;
-        //getWidth(context);
-        int windowWidth = 1080;
-        int count = 0;
+        int fontSize;
+        int windowWidth;
+        int lineWidth = 0;
+        int pLeft = 7;
+        int pTop = 2;
+        int pRight = 7;
+        int pBottom = 2;
+
+        //this.measure(0, 0);
 
         removeAllViews();
+
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        windowWidth = metrics.widthPixels;
 
         LinearLayout ll = new LinearLayout(context);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         ll.setGravity(Gravity.CENTER_HORIZONTAL);
-       // LayoutParams lp = new LayoutParams(windowWidth,100);
-       // updateViewLayout(ll, lp);
-        //LayoutParams lp = (LayoutParams) ll.getLayoutParams();
-        //rowWidth = getWidth(context);//lp.width; // måste vara hela screenen !
 
         for (Map.Entry<String,Integer> entry : data.entrySet()) {
 
-            out = "  " + entry.getKey().toString() + "  ";
-            size = (entry.getValue() * 3);
+            out = entry.getKey().toString();
+            fontSize = getTagTextSize(entry.getValue());
 
             TextView tv = new TextView(context);
             tv.setText(out);
-            tv.setTextSize(size);
+            tv.setTextSize(fontSize);
+            tv.setPadding(pLeft, pTop, pRight, pBottom);
 
-            //lineWidth += tv.getWidth();
-            Log.d("test", String.valueOf(wordsPerRow));
-            //if (lineWidth > windowWidth) {
-            if (count % wordsPerRow == 0) {
+            tv.measure(0,0);
+            lineWidth += tv.getMeasuredWidth();
+
+            if (lineWidth > windowWidth) {
                 addView(ll);
+
                 //create new linear layout
                 ll = new LinearLayout(context);
                 ll.setOrientation(LinearLayout.HORIZONTAL);
                 ll.setGravity(Gravity.CENTER_HORIZONTAL);
 
                 ll.addView(tv);
+                lineWidth = tv.getMeasuredWidth();
             } else {
                 ll.addView(tv);
             }
-            count++;
         }
-
         addView(ll);
-
-    }
-
-    public void setWordsPerRow (int wordsPerRow) {
-        this.wordsPerRow = wordsPerRow;
     }
 
     public void setData (HashMap<String, Integer> data) {
         this.data = data;
     }
 
-    //check out onmeasure!
+    public void setMaxFontSize (int maxFontSize) {
+        this.maxFontSize = maxFontSize;
+        updateTags();
+    }
+
+    public void setMinFontSize (int minFontSize) {
+        this.minFontSize = minFontSize;
+        updateTags();
+    }
+
+    public void addTag (String s, int i) {
+        data.put(s,i);
+        updateTags();
+    }
+
+    private double getMax() {
+        Collection<Integer> c = data.values();
+        return Collections.max(c);
+
+    }
+
+    private double getMin() {
+        Collection<Integer> c = data.values();
+        return Collections.min(c);
+    }
+
+    private int getTagTextSize (int value) {
+        double norm = (value - getMin()) / (getMax() - getMin());
+        double size = (minFontSize*(1-norm)) + norm*maxFontSize;
+        return (int) size;
+    }
+
+
+    /*
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+    }*/
 }

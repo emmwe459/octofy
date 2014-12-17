@@ -31,12 +31,14 @@ public class MainActivity extends Activity {
         data.put("Phones", 5);
         data.put("Hyppopotamus", 10);
         data.put("Balloons", 8);
-        data.put("Octupie", 10);
+        data.put("Octupie", 11);
 
         tagCloud = (TagCloud) findViewById(R.id.tagcloud);
         tagCloud.setData(data);
-        tagCloud.setWordsPerRow(3);
-        tagCloud.updateText();
+        tagCloud.updateTags();
+        tagCloud.addTag("Grizzlybears", 1);
+        tagCloud.setMinFontSize(10);
+
     }
 
     @Override

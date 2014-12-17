@@ -14,7 +14,7 @@ import android.widget.ListView;
 import java.util.Map;
 
 /**
- * Created by linneanabo on 2014-12-12.
+ * Not used at the moment / dec 17
  */
 public class TagCloudView extends AdapterView {
 
