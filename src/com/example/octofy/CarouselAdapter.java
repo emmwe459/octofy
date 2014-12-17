@@ -17,6 +17,9 @@ public class CarouselAdapter extends BaseAdapter {
 	private Context _context;
 	private String[] tags, img_paths;
 	private int[] counts;
+    int firstIndex = 0;
+    private String[] subTags, subPaths;
+    private int[] subCount;
 	
 	public CarouselAdapter(Context applicationContext) {
 		_context = applicationContext;
@@ -60,11 +63,15 @@ public class CarouselAdapter extends BaseAdapter {
 				0,
 				0,
 				0 };
+
+        subTags = Arrays.copyOfRange(tags,firstIndex,firstIndex+3);
+        subPaths = Arrays.copyOfRange(img_paths,firstIndex,firstIndex+3);
+        subCount = Arrays.copyOfRange(counts,firstIndex,firstIndex+3);
 	}
 
 	@Override
 	public int getCount() {
-		return tags.length;
+        return subTags.length;
 	}
 
 	@Override
@@ -74,15 +81,15 @@ public class CarouselAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		return 0;
+		return position;
 	}
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
-		//Log.d("test","child pos: " + position);
+		Log.d("test","child pos: " + position);
 		View view = LayoutInflater.from(_context).inflate(R.layout.carousel_item, null);
         Resources resources = parent.getContext().getResources();
-        final int resourceId = resources.getIdentifier(img_paths[position], "drawable", 
+        final int resourceId = resources.getIdentifier(subPaths[position], "drawable",
            parent.getContext().getPackageName());
         view.setBackgroundResource(resourceId);
         
@@ -91,8 +98,8 @@ public class CarouselAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// Increase count for tag
-				counts[position]++;
-				Toast toast = Toast.makeText(parent.getContext(), "Color " + tags[position] + " has " + Integer.toString(counts[position]) + " votes!", Toast.LENGTH_SHORT);
+				subCount[position]++;
+				Toast toast = Toast.makeText(parent.getContext(), "Color " + subTags[position] + " has " + Integer.toString(subCount[position]) + " votes!", Toast.LENGTH_SHORT);
 				toast.show();
 			}
 			
@@ -104,4 +111,25 @@ public class CarouselAdapter extends BaseAdapter {
         return view;
 	}
 
+    private void setFirstIndex ( int firstIndex ) {
+        this.firstIndex = firstIndex;
+    }
+
+    private void setSubs() {
+        if(firstIndex+3 < tags.length) {
+            subTags = Arrays.copyOfRange(tags, firstIndex, firstIndex + 3);
+            subPaths = Arrays.copyOfRange(img_paths, firstIndex, firstIndex + 3);
+            subCount = Arrays.copyOfRange(counts, firstIndex, firstIndex + 3);
+        }
+    }
+
+    public void stepRight () {
+        setFirstIndex(firstIndex+1);
+        setSubs();
+    }
+
+    public void stepLeft () {
+        setFirstIndex(firstIndex-1);
+        setSubs();
+    }
 }

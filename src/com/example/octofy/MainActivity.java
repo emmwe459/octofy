@@ -57,6 +57,9 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+
+                carouselAdapter.stepLeft();
+                carousel.setAdapter(carouselAdapter);
 				
 				if(leftIndex >= 0) {
 					rightIndex--;
@@ -72,7 +75,7 @@ public class MainActivity extends Activity {
 						button_right.setEnabled(true);
 					}
 					
-					carousel.requestLayout();
+					//carousel.requestLayout();
 				}
 	
 				
@@ -83,7 +86,11 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				
+
+                carouselAdapter.stepRight();
+                carousel.setAdapter(carouselAdapter);
+
+
 				if(rightIndex < carouselAdapter.getCount()-1) {
 					rightIndex++;
 					leftIndex++;
@@ -98,7 +105,7 @@ public class MainActivity extends Activity {
 						button_left.setEnabled(true);
 					}
 					
-					carousel.requestLayout();
+					//carousel.setAdapter(carouselAdapter);//requestLayout();
 				}
 			}
 		});
