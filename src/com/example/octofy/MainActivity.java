@@ -31,13 +31,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carousel);
         
-        numOfImagesToShow = 8;
+        numOfImagesToShow = 4;
         
         /*listview = (ListView) findViewById(R.id.listview);
         carouselAdapter = new CarouselAdapter(this.getBaseContext());
         listview.setAdapter(carouselAdapter);*/
         
-        carouselAdapter = new CarouselAdapter(this.getBaseContext());
+        carouselAdapter = new CarouselAdapter(this.getBaseContext(), numOfImagesToShow);
                 
         carousel = (Carousel)findViewById(R.id.carousel);
         carousel.setNumOfImagesToShow(numOfImagesToShow);
@@ -110,51 +110,4 @@ public class MainActivity extends Activity {
 			}
 		});
     }
-    
-    /*private BaseAdapter adapter = new BaseAdapter() {
- 
-        @Override
-        public int getCount() {
-            return colors.length;
-        }
- 
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
- 
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
- 
-        @Override
-        public View getView(final int position, View convertView, final ViewGroup parent) {
-        	
-        	View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.carousel_item, null);
-            
-            Resources resources = parent.getContext().getResources();
-            final int resourceId = resources.getIdentifier(img_paths[position], "drawable", 
-               parent.getContext().getPackageName());
-            view.setBackgroundResource(resourceId);
-            
-			view.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// Increase count for tag
-					numOfClicks[position]++;
-					Toast toast = Toast.makeText(parent.getContext(), "Color " + colors[position] + " has " + Integer.toString(numOfClicks[position]) + " votes!", Toast.LENGTH_SHORT);
-					toast.show();
-				}
-				
-			});
-			
-            TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(colors[position]);
-           
-            return view;
-        }
-        
-    };*/
 }

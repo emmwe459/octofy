@@ -20,9 +20,11 @@ public class CarouselAdapter extends BaseAdapter {
     int firstIndex = 0;
     private String[] subTags, subPaths;
     private int[] subCount;
+    private int numOfImagesToShow;
 	
-	public CarouselAdapter(Context applicationContext) {
+	public CarouselAdapter(Context applicationContext, int num) {
 		_context = applicationContext;
+		numOfImagesToShow = num;
 		init();
 	}
 
@@ -64,14 +66,14 @@ public class CarouselAdapter extends BaseAdapter {
 				0,
 				0 };
 
-        subTags = Arrays.copyOfRange(tags,firstIndex,firstIndex+3);
-        subPaths = Arrays.copyOfRange(img_paths,firstIndex,firstIndex+3);
-        subCount = Arrays.copyOfRange(counts,firstIndex,firstIndex+3);
+        subTags = Arrays.copyOfRange(tags,firstIndex,firstIndex+numOfImagesToShow);
+        subPaths = Arrays.copyOfRange(img_paths,firstIndex,firstIndex+numOfImagesToShow);
+        subCount = Arrays.copyOfRange(counts,firstIndex,firstIndex+numOfImagesToShow);
 	}
 
 	@Override
 	public int getCount() {
-        return subTags.length;
+        return tags.length;
 	}
 
 	@Override
@@ -116,10 +118,10 @@ public class CarouselAdapter extends BaseAdapter {
     }
 
     private void setSubs() {
-        if(firstIndex+3 < tags.length) {
-            subTags = Arrays.copyOfRange(tags, firstIndex, firstIndex + 3);
-            subPaths = Arrays.copyOfRange(img_paths, firstIndex, firstIndex + 3);
-            subCount = Arrays.copyOfRange(counts, firstIndex, firstIndex + 3);
+        if(firstIndex+numOfImagesToShow < tags.length) {
+            subTags = Arrays.copyOfRange(tags, firstIndex, firstIndex + numOfImagesToShow);
+            subPaths = Arrays.copyOfRange(img_paths, firstIndex, firstIndex + numOfImagesToShow);
+            subCount = Arrays.copyOfRange(counts, firstIndex, firstIndex + numOfImagesToShow);
         }
     }
 
