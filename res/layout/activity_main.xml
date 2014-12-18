@@ -9,7 +9,7 @@
             android:id="@+id/header"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:gravity="center_horizontal"
             android:textSize="20dp"/>
 
     <com.example.octofy.TagCloud
@@ -22,10 +22,7 @@
             android:id="@+id/carousel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            custom:NumberOfImagesToShow="2"
+            custom:NumberOfImagesToShow="4"
             android:layout_below="@id/tagcloud"/>
-
-
-
 
 </RelativeLayout>
