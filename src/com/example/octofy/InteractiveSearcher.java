@@ -79,12 +79,7 @@ public class InteractiveSearcher extends RelativeLayout {
                 } else if (!resultList.isShowing()) {
                     resultList.show();
                 }
-				/* use AsyncTask, otherwise error NetworkOnMainThreadException when trying to connect to URL on main thread
-				 * Example taken from here: http://developer.android.com/training/basics/network-ops/connecting.html:
-				 * Class: DownloadWebpage
-				 * Functions: downloadUrl, readIt
-				 * */
-
+				
                 String url = "http://flask-afteach.rhcloud.com/getnames/"+ Integer.toString(search_id) + "/" + arg0.toString();
 
                 // check if there is network connection
@@ -121,9 +116,8 @@ public class InteractiveSearcher extends RelativeLayout {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            //Log.d("test","Result: " + result);
             resultAdapter.updateData(names);
-            resultList.setAdapter(resultAdapter);
+            resultAdapter.notifyDataSetChanged();
             if(!names.isEmpty()) {
                 resultList.show();
                 searchField.requestFocus();
@@ -142,8 +136,6 @@ public class InteractiveSearcher extends RelativeLayout {
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
             conn.connect();
-            /*int response = conn.getResponseCode();
-            Log.d("test", "Response code: " + response);*/
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
@@ -158,7 +150,6 @@ public class InteractiveSearcher extends RelativeLayout {
         }
     }
 
-    // adapt to JSON object?
     public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
 
         String toReturn = "";
