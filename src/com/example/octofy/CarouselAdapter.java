@@ -30,28 +30,28 @@ public class CarouselAdapter extends BaseAdapter {
 	private void init() {
 		
 		tags = new String[]{
-				"Blue",
-		    	"Green",
-		    	"Yellow",
-		    	"Purple",
-		    	"Pink",
-				"Blue",
-		    	"Green",
-		    	"Yellow",
-		    	"Purple",
-		    	"Pink" };
+				"Blue seastar",
+				"Orange flower",
+		    	"Green seastar",
+		    	"Blue-yellow flower",
+		    	"Yellow seastar",
+		    	"Red-yellow flower",
+		    	"Purple seastar",
+		    	"Green flower",
+		    	"Pink seastar",
+		    	"Orange flower 2" };
 		
 		img_paths = new String[]{
 				"sea_star1_blue",
+				"flower1",
 				"sea_star1_green",
+				"flower2",
 				"sea_star1_yellow",
+				"flower3",
 				"sea_star1_purple",
+				"flower4",
 				"sea_star1_pink",
-				"sea_star1_blue",
-				"sea_star1_green",
-				"sea_star1_yellow",
-				"sea_star1_purple",
-				"sea_star1_pink" };
+				"flower5" };
 		
 		counts = new int[]{
 				0,
@@ -103,15 +103,21 @@ public class CarouselAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// Increase count for tag
-				subCount[position]++;
-				Toast toast = Toast.makeText(parent.getContext(), "Color " + subTags[position] + " has " + Integer.toString(subCount[position]) + " votes!", Toast.LENGTH_SHORT);
+				counts[position+firstIndex]++;
+				String message = subTags[position] + " has " + Integer.toString(counts[position+firstIndex]);
+				if(counts[position+firstIndex] == 1) {
+					message += " vote!";
+				} else {
+					message += " votes!";
+				}
+				Toast toast = Toast.makeText(parent.getContext(), message, Toast.LENGTH_SHORT);
 				toast.show();
 			}
 			
 		});
 		
         TextView title = (TextView) view.findViewById(R.id.title);
-        title.setText(tags[position]);
+        title.setText(tags[position+firstIndex]);
         
         return view;
 	}
