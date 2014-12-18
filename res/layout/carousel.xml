@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+        <Button
+                android:id="@+id/goLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/left_arrow_disabled"
+                style="?android:attr/borderlessButtonStyle" />
+
+        <Button
+                android:id="@+id/goRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/right_arrow"
+                style="?android:attr/borderlessButtonStyle" />
+
+    </LinearLayout>
+
+    <com.example.octofy.CarouselList
+            android:id="@+id/carousel_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+</LinearLayout>

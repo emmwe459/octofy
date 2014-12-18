@@ -1,41 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.example.octofy"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    
-    <!-- <ListView 
-        android:id="@+id/listview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#48E94D" />-->
-    
-    <LinearLayout
-        android:id="@+id/buttons"
-	    android:layout_width="wrap_content"
-    	android:layout_height="wrap_content" >
-        
-        <Button
-		    android:id="@+id/goLeft"
-		   	android:layout_width="wrap_content"
-		   	android:layout_height="wrap_content"
-		   	android:background="@drawable/left_arrow_disabled"
-    		style="?android:attr/borderlessButtonStyle" />
-    
-	    <Button
-	        android:id="@+id/goRight"
-	    	android:layout_width="wrap_content"
-	    	android:layout_height="wrap_content"
-	    	android:background="@drawable/right_arrow"
-    		style="?android:attr/borderlessButtonStyle" />
-        
-    </LinearLayout>
+
 
     <com.example.octofy.Carousel
         android:id="@+id/carousel"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        custom:NumberOfImagesToShow="4" />
 
 </LinearLayout>
 

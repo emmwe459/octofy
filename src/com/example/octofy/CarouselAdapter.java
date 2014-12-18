@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ public class CarouselAdapter extends BaseAdapter {
 	private Context _context;
 	private String[] tags, img_paths;
 	private int[] counts;
-    int firstIndex = 0;
+    int firstIndex;
     private String[] subTags, subPaths;
     private int[] subCount;
     private int numOfImagesToShow;
@@ -66,6 +65,7 @@ public class CarouselAdapter extends BaseAdapter {
 				0,
 				0 };
 
+        firstIndex = 0;
         subTags = Arrays.copyOfRange(tags,firstIndex,firstIndex+numOfImagesToShow);
         subPaths = Arrays.copyOfRange(img_paths,firstIndex,firstIndex+numOfImagesToShow);
         subCount = Arrays.copyOfRange(counts,firstIndex,firstIndex+numOfImagesToShow);
@@ -92,7 +92,6 @@ public class CarouselAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
-		Log.d("test","child pos: " + position);
 		View view = LayoutInflater.from(_context).inflate(R.layout.carousel_item, null);
         Resources resources = parent.getContext().getResources();
         final int resourceId = resources.getIdentifier(subPaths[position], "drawable",
