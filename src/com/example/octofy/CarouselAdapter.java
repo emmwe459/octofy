@@ -29,18 +29,8 @@ public class CarouselAdapter extends BaseAdapter {
 
 	private void init() {
 		
-		tags = new String[]{
-				"Blue seastar",
-				"Orange flower",
-		    	"Green seastar",
-		    	"Blue-yellow flower",
-		    	"Yellow seastar",
-		    	"Red-yellow flower",
-		    	"Purple seastar",
-		    	"Green flower",
-		    	"Pink seastar",
-		    	"Orange flower 2" };
-		
+		tags = new String[]{};
+        counts = new int[]{};
 		img_paths = new String[]{
 				"sea_star1_blue",
 				"flower1",
@@ -52,18 +42,6 @@ public class CarouselAdapter extends BaseAdapter {
 				"flower4",
 				"sea_star1_pink",
 				"flower5" };
-		
-		counts = new int[]{
-				0,
-				0,
-				0,
-				0,
-				0,
-				0,
-				0,
-				0,
-				0,
-				0 };
 
         firstIndex = 0;
         subTags = Arrays.copyOfRange(tags,firstIndex,firstIndex+numOfImagesToShow);
@@ -142,5 +120,10 @@ public class CarouselAdapter extends BaseAdapter {
     public void stepLeft () {
         setFirstIndex(firstIndex-1);
         setSubs();
+    }
+
+    public void setData(String[] s, int[] i) {
+        tags = s;
+        counts = i;
     }
 }

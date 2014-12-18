@@ -104,4 +104,9 @@ public class Carousel extends LinearLayout {
             }
         });
     }
+
+    public void setData(String[] s, int[] i) {
+        carouselAdapter.setData(s,i);
+        carouselList.setAdapter(carouselAdapter);
+    }
 }
