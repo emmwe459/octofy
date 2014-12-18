@@ -2,10 +2,8 @@ package com.example.octofy;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -27,7 +25,7 @@ public class RowView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        int width = 0;//this.getMeasuredWidth();
+        int width = 0;
         int height = this.getMeasuredHeight();
         int textsize = height*4/3;
 

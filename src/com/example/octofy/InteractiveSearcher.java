@@ -12,14 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class InteractiveSearcher extends RelativeLayout {
@@ -144,8 +142,8 @@ public class InteractiveSearcher extends RelativeLayout {
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
             conn.connect();
-            int response = conn.getResponseCode();
-            //Log.d("test", "Response code: " + response);
+            /*int response = conn.getResponseCode();
+            Log.d("test", "Response code: " + response);*/
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
@@ -169,13 +167,6 @@ public class InteractiveSearcher extends RelativeLayout {
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
 
-        /*
-        char[] buffer = new char[1000];
-        reader.read(buffer);
-        String s = new String(buffer);
-        Log.d("test", s);
-        */
-
         try {
             JsonReader jsonReader = new JsonReader(reader);
             jsonReader.beginObject();
@@ -185,6 +176,7 @@ public class InteractiveSearcher extends RelativeLayout {
 
             // if the returned is not the same as requested, return nothing
             if (Integer.parseInt(search_id) != latestRequestId) {
+            	jsonReader.close();
                 return "";
             }
 
