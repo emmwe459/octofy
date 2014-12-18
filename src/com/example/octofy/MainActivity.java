@@ -2,12 +2,11 @@ package com.example.octofy;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.widget.Button;
 
 public class MainActivity extends Activity {
 	
     private Carousel carousel;
-    public String[] tags;
+    public String[] tags, img_paths;
     public int[] counts;
 
     @Override
@@ -19,10 +18,19 @@ public class MainActivity extends Activity {
                 "Yellow seastar","Red-yellow flower","Purple seastar","Green flower","Pink seastar","Orange flower 2" };
 
         counts = new int[]{0,0,0,0,0,0,0,0,0,0 };
+        img_paths = new String[]{
+                "sea_star1_blue",
+                "flower1",
+                "sea_star1_green",
+                "flower2",
+                "sea_star1_yellow",
+                "flower3",
+                "sea_star1_purple",
+                "flower4",
+                "sea_star1_pink",
+                "flower5" };
 
         carousel = (Carousel) findViewById(R.id.carousel);
-        carousel.setData(tags, counts);
-
-
+        carousel.setData(tags, counts, img_paths);
     }
 }

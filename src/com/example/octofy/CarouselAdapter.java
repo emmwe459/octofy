@@ -24,24 +24,9 @@ public class CarouselAdapter extends BaseAdapter {
 	public CarouselAdapter(Context applicationContext, int num) {
 		_context = applicationContext;
 		numOfImagesToShow = num;
-		init();
 	}
 
 	private void init() {
-		
-		tags = new String[]{};
-        counts = new int[]{};
-		img_paths = new String[]{
-				"sea_star1_blue",
-				"flower1",
-				"sea_star1_green",
-				"flower2",
-				"sea_star1_yellow",
-				"flower3",
-				"sea_star1_purple",
-				"flower4",
-				"sea_star1_pink",
-				"flower5" };
 
         firstIndex = 0;
         subTags = Arrays.copyOfRange(tags,firstIndex,firstIndex+numOfImagesToShow);
@@ -122,8 +107,10 @@ public class CarouselAdapter extends BaseAdapter {
         setSubs();
     }
 
-    public void setData(String[] s, int[] i) {
+    public void setData(String[] s, int[] i, String[] j) {
         tags = s;
         counts = i;
+        img_paths = j;
+        init();
     }
 }

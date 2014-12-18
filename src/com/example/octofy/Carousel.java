@@ -46,7 +46,6 @@ public class Carousel extends LinearLayout {
         carouselAdapter = new CarouselAdapter(context, numOfImagesToShow);
 
         carouselList.setNumOfImagesToShow(numOfImagesToShow);
-        carouselList.setAdapter(carouselAdapter);
 
         index = 0;
 
@@ -105,8 +104,8 @@ public class Carousel extends LinearLayout {
         });
     }
 
-    public void setData(String[] s, int[] i) {
-        carouselAdapter.setData(s,i);
+    public void setData(String[] s, int[] i, String[] j) {
+        carouselAdapter.setData(s,i, j);
         carouselList.setAdapter(carouselAdapter);
     }
 }
