@@ -5,4 +5,13 @@
         <attr name="CarouselTitleText" format="string" localization="suggested" />
         <attr name="NumberOfImagesToShow" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="TagCloudView">
+        <attr name="cloudTitleText" format="string" localization="suggested" />
+        <attr name="cloudValueColor" format="color" />
+        <attr name="cloudCircleColor" format="color" />
+        <attr name="cloudCircleLabel" format="string"/>>
+        <attr name="cloudLabelColor" format="color"/>
+    </declare-styleable>
+
 </resources>
