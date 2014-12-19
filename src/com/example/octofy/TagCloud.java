@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * <h1>TagCloud</h1>
  * TagCloud is an extended LinearLayout, built to display a data set of tags.
- * 
+ *
  * @see com.example.octofy.Tag
  * @see android.widget.LinearLayout
  */
@@ -58,8 +58,8 @@ public class TagCloud extends LinearLayout{
      * @param context Context
      * @param attrs Class attributes
      *
-     * @see android.content.Context
      * @see android.util.AttributeSet
+     * @see android.content.Context
      */
     public TagCloud(Context context, AttributeSet attrs) {
         super(context, attrs);

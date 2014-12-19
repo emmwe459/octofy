@@ -8,24 +8,63 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+/**
+ * <h1>Carousel</h1>
+ * Carousel is an extended LinearLayout, built to display a set of images.
+ * A specified number of images are displayed and a the user can browse through all the images.
+ * The class contains a set of arrow buttons and a list of images.
+ *
+ * @see com.example.octofy.CarouselList
+ * @see com.example.octofy.CarouselAdapter
+ * @see android.widget.LinearLayout
+ */
 public class Carousel extends LinearLayout {
-	
+
+    /**
+     * Context
+     */
     private Context context;
+    /**
+     * The list containing the images.
+     */
     private CarouselList carouselList;
+    /**
+     * Button to browse left.
+     */
     private Button button_left;
+    /**
+     * Button to browse right.
+     */
     private Button button_right;
+    /**
+     * Adapter used to display the images of the CarouselList
+     */
     private CarouselAdapter carouselAdapter;
 
+    /**
+     * The set number of images to show at one time in the carousel.
+     * Specified in the XML layout file. Default value is 5 images.
+     */
     private int numOfImagesToShow;
+    /**
+     * The index used to iterate over the images to display.
+     * The index denotes the rightmost image of the current display.
+     */
     private int browsingIndex;
 
+    /**
+     * Public class constructor.
+     *
+     * @param context Context
+     * @param attrs Attributes
+     */
 	public Carousel(Context context, AttributeSet attrs) {
 		super(context, attrs);
         this.context = context;
 
         // retrieve number of images to show in the carousel, which can be set in file 'res/layout/activity_main.xml'
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Carousel);
-        numOfImagesToShow = a.getInteger(R.styleable.Carousel_NumberOfImagesToShow, 7);
+        numOfImagesToShow = a.getInteger(R.styleable.Carousel_NumberOfImagesToShow, 5);
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
