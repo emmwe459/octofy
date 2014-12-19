@@ -46,6 +46,10 @@ public class CarouselAdapter extends BaseAdapter {
         subTags = Arrays.copyOfRange(tags,firstIndex,firstIndex+numOfImagesToShow);
         subImgPaths = Arrays.copyOfRange(imgPaths,firstIndex,firstIndex+numOfImagesToShow);
 	}
+	
+	public int getNumOfImagesToShow() {
+		return numOfImagesToShow;
+	}
 
 	@Override
 	public int getCount() {
@@ -110,6 +114,15 @@ public class CarouselAdapter extends BaseAdapter {
 	 */
     private void setFirstIndex (int firstIndex) {
         this.firstIndex = firstIndex;
+    }
+    
+    /**
+     * Get the index of the tag object at the leftmost in the carousel list.
+     * 
+     * @return first index
+     */
+    public int getFirstIndex() {
+    	return firstIndex;
     }
 
     /**

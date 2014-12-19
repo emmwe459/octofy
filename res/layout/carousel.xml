@@ -29,6 +29,5 @@
     <com.example.octofy.CarouselList
             android:id="@+id/carousel_list"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"/>
+            android:layout_height="wrap_content" />
 </LinearLayout>
