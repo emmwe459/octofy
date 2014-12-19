@@ -1,10 +1,11 @@
 package com.example.octofy;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.widget.TextView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
@@ -15,7 +16,7 @@ public class MainActivity extends Activity {
     public int[] counts;
 
     TagCloud tagCloud;
-    HashMap<String, Integer> data;
+    ArrayList<Tag> tagList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,23 +26,26 @@ public class MainActivity extends Activity {
         header = (TextView) findViewById(R.id.header);
         header.setText("The Rorschach carousel!");
 
-        data = new HashMap<String, Integer>();
-        data.put("Blue seastar", 3);
-        data.put("Orange flower", 5);
-        data.put("Green seastar", 1);
-        data.put("Blue-yellow flower", 7);
-        data.put("Yellow seastar", 3);
-        data.put("Red-yellow flower", 5);
-        data.put("Purple seastar", 5);
-        data.put("Green flower", 10);
-        data.put("Pink seastar", 8);
-        data.put("Orange flower", 11);
+        tagList = new ArrayList<Tag>();
+        tagList.add(new Tag("Blue seastar", 3, Color.rgb(0,0,210)));
+        tagList.add(new Tag("Orange flower", 5));
+        tagList.add(new Tag("Green seastar", 10, Color.rgb(0,240,0)));
+        tagList.add(new Tag("Blue-yellow flower", 7));
+        tagList.add(new Tag("Yellow seastar", 7));
+        tagList.add(new Tag("Red-yellow flower", 3));
+        tagList.add(new Tag("Purple seastar", 1, Color.rgb(150, 0, 90)));
+        tagList.add(new Tag("Green flower", 15));
+        tagList.add(new Tag("Pink seastar", 7));
+        tagList.add(new Tag("Orange flower", 6, Color.rgb(255,165,0)));
 
         tagCloud = (TagCloud) findViewById(R.id.tagcloud);
-        tagCloud.setData(data);
-        tagCloud.updateTags();
-        tagCloud.addTag("Grizzlybears", 1);
+        tagCloud.setData(tagList);
+
+        //Possible edits
+        tagCloud.addTag(new Tag("Grizzlybears", 1));
         tagCloud.setMinFontSize(10);
+        tagCloud.setMaxFontSize(32);
+        tagCloud.setTagPadding(2,7,2,7);
 
 
         tags = new String[]{"Blue seastar","Orange flower","Green seastar","Blue-yellow flower",

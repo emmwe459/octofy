@@ -3,23 +3,23 @@ package com.example.octofy;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TagCloud extends LinearLayout{
 
-    HashMap<String, Integer> data;
+    ArrayList<Tag> tagArrayList;
     Context context;
     int maxFontSize = 30; // default
     int minFontSize = 6; // default
+    private int paddingTop = 1; // default
+    private int paddingRight = 5; // default
+    private int paddingLeft = 1; // default
+    private int paddingBottom = 5; // default
 
     public TagCloud(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -39,12 +39,6 @@ public class TagCloud extends LinearLayout{
         int fontSize;
         int windowWidth;
         int lineWidth = 0;
-        int pLeft = 7;
-        int pTop = 2;
-        int pRight = 7;
-        int pBottom = 2;
-
-        //this.measure(0, 0);
 
         removeAllViews();
 
@@ -55,15 +49,17 @@ public class TagCloud extends LinearLayout{
         ll.setOrientation(LinearLayout.HORIZONTAL);
         ll.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        for (Map.Entry<String,Integer> entry : data.entrySet()) {
+        int i = 0;
+        while (i < tagArrayList.size()) {
 
-            out = entry.getKey().toString();
-            fontSize = getTagTextSize(entry.getValue());
+            out = tagArrayList.get(i).getText();
+            fontSize = getTagTextSize(tagArrayList.get(i).getTextSize());
 
             TextView tv = new TextView(context);
             tv.setText(out);
             tv.setTextSize(fontSize);
-            tv.setPadding(pLeft, pTop, pRight, pBottom);
+            tv.setTextColor(tagArrayList.get(i).getColor());
+            tv.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
 
             tv.measure(0,0);
             lineWidth += tv.getMeasuredWidth();
@@ -81,12 +77,14 @@ public class TagCloud extends LinearLayout{
             } else {
                 ll.addView(tv);
             }
+            i++;
         }
         addView(ll);
     }
 
-    public void setData (HashMap<String, Integer> data) {
-        this.data = data;
+    public void setData (ArrayList<Tag> tagArrayList) {
+        this.tagArrayList = tagArrayList;
+        updateTags();
     }
 
     public void setMaxFontSize (int maxFontSize) {
@@ -99,20 +97,28 @@ public class TagCloud extends LinearLayout{
         updateTags();
     }
 
-    public void addTag (String s, int i) {
-        data.put(s,i);
+    public void setTagPadding (int t, int r, int b, int l) {
+        this.paddingTop = t;
+        this.paddingRight = r;
+        this.paddingBottom = b;
+        this.paddingLeft = l;
+        updateTags();
+    }
+
+    public void addTag (Tag t) {
+        tagArrayList.add(t);
         updateTags();
     }
 
     private double getMax() {
-        Collection<Integer> c = data.values();
-        return Collections.max(c);
+        Tag t = Collections.max(tagArrayList);
+        return t.getTextSize();
 
     }
 
     private double getMin() {
-        Collection<Integer> c = data.values();
-        return Collections.min(c);
+        Tag t = Collections.min(tagArrayList);
+        return t.getTextSize();
     }
 
     private int getTagTextSize (int value) {
@@ -120,11 +126,4 @@ public class TagCloud extends LinearLayout{
         double size = (minFontSize*(1-norm)) + norm*maxFontSize;
         return (int) size;
     }
-
-
-    /*
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-    }*/
 }

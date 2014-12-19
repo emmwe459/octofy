@@ -1,31 +1,55 @@
 package com.example.octofy;
 
-/**
- * Created by linneanabo on 2014-12-18.
- */
-public class Tag {
+import android.graphics.Color;
 
-    private String word;
-    private int weight;
 
-    public Tag (String word, int weight) {
-        this.word = word;
-        this.weight = weight;
+public class Tag implements Comparable<Tag> {
+
+    private String text;
+    private int textSize;
+    private int color = Color.rgb(0,0,0); // default
+
+    public Tag (String text, int textSize) {
+        this.text = text;
+        this.textSize = textSize;
     }
 
-    public void setWord (String word) {
-        this.word = word;
+    public Tag (String text, int textSize, int color) {
+        this.text = text;
+        this.textSize = textSize;
+        this.color = color;
     }
 
-    public void setWeight (int weight) {
-        this.weight = weight;
+    public String  getText() {
+        return text;
     }
 
-    public String getWord() {
-        return word;
+    public int getTextSize() {
+        return textSize;
     }
 
-    public int getWeight() {
-        return weight;
+    public int getColor() {
+        return color;
+    }
+
+    public void setText (String text) {
+        this.text = text;
+    }
+
+    public void setTextSize (int textSize) {
+        this.textSize = textSize;
+    }
+
+    public void setColor (int color) {
+        this.color = color;
+    }
+
+    @Override
+    public int compareTo(Tag another) {
+        if (this.textSize > another.getTextSize())
+            return 1;
+        if (this.textSize == another.getTextSize())
+            return 0;
+        return -1;
     }
 }
