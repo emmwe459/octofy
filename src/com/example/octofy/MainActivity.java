@@ -2,6 +2,7 @@ package com.example.octofy;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.Color;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -24,30 +25,35 @@ public class MainActivity extends Activity {
 
         header = (TextView) findViewById(R.id.header);
         header.setText("The Rorschach carousel!");
-
-        data = new HashMap<String, Integer>();
-        data.put("Blue seastar", 3);
-        data.put("Orange flower", 5);
-        data.put("Green seastar", 1);
-        data.put("Blue-yellow flower", 7);
-        data.put("Yellow seastar", 3);
-        data.put("Red-yellow flower", 5);
-        data.put("Purple seastar", 5);
-        data.put("Green flower", 10);
-        data.put("Pink seastar", 8);
-        data.put("Orange flower", 11);
-
-        tagCloud = (TagCloud) findViewById(R.id.tagcloud);
-        tagCloud.setData(data);
-        tagCloud.updateTags();
-        tagCloud.addTag("Grizzlybears", 1);
-        tagCloud.setMinFontSize(10);
-
-
-        tags = new String[]{"Blue seastar","Orange flower","Green seastar","Blue-yellow flower",
-            "Yellow seastar","Red-yellow flower","Purple seastar","Green flower","Pink seastar","Orange flower 2" };
-
-        counts = new int[]{0,0,0,0,0,0,0,0,0,0 };
+        header.setTextColor(Color.BLUE);
+        
+        // tag names
+        tags = new String[]{
+        		"Blue seastar",
+        		"Orange flower",
+        		"Green seastar",
+        		"Blue-yellow flower",
+                "Yellow seastar",
+                "Red-yellow flower",
+                "Purple seastar",
+                "Green flower",
+                "Pink seastar",
+                "Super orange flower" };
+        
+        // tag counters, i.e. how many times the image corresponding to the tag has been clicked in the carousel
+        counts = new int[]{
+        		3,
+        		5,
+        		1,
+        		7,
+        		3,
+        		5,
+        		5,
+        		10,
+        		8,
+        		11 };
+        
+        // names for the image corresponding to each tag
         img_paths = new String[]{
                 "sea_star1_blue",
                 "flower1",
@@ -60,6 +66,21 @@ public class MainActivity extends Activity {
                 "sea_star1_pink",
                 "flower5" };
 
+        // initiating data for tag cloud
+        data = new HashMap<String, Integer>();
+        
+        for(int i = 0; i < tags.length; i++) {
+        	data.put(tags[i], counts[i]);
+        }
+
+        // set up for tag cloud
+        tagCloud = (TagCloud) findViewById(R.id.tagcloud);
+        tagCloud.setData(data);
+        tagCloud.updateTags();
+        tagCloud.addTag("Grizzlybears", 1);
+        tagCloud.setMinFontSize(10);
+        
+        // set up for carousel
         carousel = (Carousel) findViewById(R.id.carousel);
         carousel.setData(tags, counts, img_paths);
     }
