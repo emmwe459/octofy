@@ -1,31 +1,106 @@
 package com.example.octofy;
 
+import android.graphics.Color;
+
 /**
- * Created by linneanabo on 2014-12-18.
+ * <h1>Tag</h1>
+ * Tag class holding information of a tag used in a tag cloud.
+ * @see com.example.octofy.TagCloud
  */
-public class Tag {
+public class Tag implements Comparable<Tag> {
 
-    private String word;
-    private int weight;
+    /**
+     * The text of the tag.
+     */
+    private String text;
+    /**
+     * The count (for example times used, importance or click count) of the tag.
+     */
+    private int count;
+    /**
+     * The color of the tag, default value is black color.
+     */
+    private int color = Color.rgb(0,0,0); // default
 
-    public Tag (String word, int weight) {
-        this.word = word;
-        this.weight = weight;
+    /**
+     * Public class constructor.
+     *
+     * @param text The text of the tag.
+     * @param count The count  of the tag.
+     */
+    public Tag (String text, int count) {
+        this.text = text;
+        this.count = count;
     }
 
-    public void setWord (String word) {
-        this.word = word;
+    /**
+     * Public class constructor.
+     *
+     * @param text The text of the tag.
+     * @param count The count of the tag.
+     * @param color The color of the tag.
+     */
+    public Tag (String text, int count, int color) {
+        this.text = text;
+        this.count = count;
+        this.color = color;
     }
 
-    public void setWeight (int weight) {
-        this.weight = weight;
+    /**
+     * @return Text of the tag.
+     */
+    public String  getText() {
+        return text;
     }
 
-    public String getWord() {
-        return word;
+    /**
+     * @return The count of the tag.
+     */
+    public int getCount() {
+        return count;
     }
 
-    public int getWeight() {
-        return weight;
+    /**
+     * @return The color of the tag.
+     */
+    public int getColor() {
+        return color;
+    }
+
+    /**
+     * @param text Text to set on the tag.
+     */
+    public void setText (String text) {
+        this.text = text;
+    }
+
+    /**
+     * @param count Count to set on the tag.
+     */
+    public void setCount (int count) {
+        this.count = count;
+    }
+
+    /**
+     * @param color Color to set on the tag.
+     */
+    public void setColor (int color) {
+        this.color = color;
+    }
+
+    /**
+     * Comparator implemented through comparable.
+     * @param t2 The tag to compare this to
+     * @return Value correspondent to the comparison.
+     *
+     * @see java.lang.Comparable
+     */
+    @Override
+    public int compareTo(Tag t2) {
+        if (this.count > t2.getCount())
+            return 1;
+        if (this.count == t2.getCount())
+            return 0;
+        return -1;
     }
 }

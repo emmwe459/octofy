@@ -3,24 +3,64 @@ package com.example.octofy;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * <h1>TagCloud</h1>
+ * TagCloud is an extended LinearLayout, built to display a data set of tags.
+ * 
+ * @see com.example.octofy.Tag
+ * @see android.widget.LinearLayout
+ */
 public class TagCloud extends LinearLayout{
 
-    HashMap<String, Integer> data;
+    /**
+     * The data set of tags
+     */
+    ArrayList<Tag> tagArrayList;
+    /**
+     * Context
+     */
     Context context;
+    /**
+     * Maximum wanted text size of the tag cloud, default value of 30dp.
+     */
     int maxFontSize = 30; // default
+    /**
+     * Minimum wanted text size of the tag cloud, default value of 6dp.
+     */
     int minFontSize = 6; // default
+    /**
+     * Specifies the top padding of each tag in the tag cloud.
+     */
+    private int tagPaddingTop = 1; // default
+    /**
+     * Specifies the right padding of each tag in the tag cloud.
+     */
+    private int tagPaddingRight = 5; // default
+    /**
+     * Specifies the left padding of each tag in the tag cloud.
+     */
+    private int tagPaddingLeft = 1; // default
+    /**
+     * Specifies the bottom padding of each tag in the tag cloud.
+     */
+    private int tagPaddingBottom = 5; // default
 
+    /**
+     * Public class constructor.
+     *
+     * @param context Context
+     * @param attrs Class attributes
+     *
+     * @see android.content.Context
+     * @see android.util.AttributeSet
+     */
     public TagCloud(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -31,100 +71,162 @@ public class TagCloud extends LinearLayout{
         setOrientation(LinearLayout.VERTICAL);
     }
 
+    /**
+     * Updates the tags on the screen.
+     * The arraylist of tags must not be empty.
+     * If the array is empty nothing is done.
+     * The tags will be drawn with the text and text color specified in the tag object.
+     * The font size will be calculated depending of the count of the tag
+     * and the count of the rest of the counts in the array.
+     * The number of tags on one row depends on the sizes of the tags.
+     *
+     * @see         Tag
+     */
     public void updateTags() {
 
-        // TODO check if empty
+        if (!tagArrayList.isEmpty()) {
 
-        String out;
-        int fontSize;
-        int windowWidth;
-        int lineWidth = 0;
-        int pLeft = 7;
-        int pTop = 2;
-        int pRight = 7;
-        int pBottom = 2;
+            String out;
+            int fontSize;
+            int windowWidth;
+            int lineWidth = 0;
 
-        //this.measure(0, 0);
+            removeAllViews();
 
-        removeAllViews();
+            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            windowWidth = metrics.widthPixels;
 
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        windowWidth = metrics.widthPixels;
+            LinearLayout ll = new LinearLayout(context);
+            ll.setOrientation(LinearLayout.HORIZONTAL);
+            ll.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        LinearLayout ll = new LinearLayout(context);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        ll.setGravity(Gravity.CENTER_HORIZONTAL);
+            int i = 0;
+            while (i < tagArrayList.size()) {
 
-        for (Map.Entry<String,Integer> entry : data.entrySet()) {
+                out = tagArrayList.get(i).getText();
+                fontSize = getTagTextSize(tagArrayList.get(i).getCount());
 
-            out = entry.getKey().toString();
-            fontSize = getTagTextSize(entry.getValue());
+                TextView tv = new TextView(context);
+                tv.setText(out);
+                tv.setTextSize(fontSize);
+                tv.setTextColor(tagArrayList.get(i).getColor());
+                tv.setPadding(tagPaddingLeft, tagPaddingTop, tagPaddingRight, tagPaddingBottom);
 
-            TextView tv = new TextView(context);
-            tv.setText(out);
-            tv.setTextSize(fontSize);
-            tv.setPadding(pLeft, pTop, pRight, pBottom);
+                tv.measure(0, 0);
+                lineWidth += tv.getMeasuredWidth();
 
-            tv.measure(0,0);
-            lineWidth += tv.getMeasuredWidth();
+                if (lineWidth > windowWidth) {
+                    addView(ll);
 
-            if (lineWidth > windowWidth) {
-                addView(ll);
+                    //create new linear layout
+                    ll = new LinearLayout(context);
+                    ll.setOrientation(LinearLayout.HORIZONTAL);
+                    ll.setGravity(Gravity.CENTER_HORIZONTAL);
 
-                //create new linear layout
-                ll = new LinearLayout(context);
-                ll.setOrientation(LinearLayout.HORIZONTAL);
-                ll.setGravity(Gravity.CENTER_HORIZONTAL);
-
-                ll.addView(tv);
-                lineWidth = tv.getMeasuredWidth();
-            } else {
-                ll.addView(tv);
+                    ll.addView(tv);
+                    lineWidth = tv.getMeasuredWidth();
+                } else {
+                    ll.addView(tv);
+                }
+                i++;
             }
+            addView(ll);
         }
-        addView(ll);
+    }
+    /**
+     * Set or update data in the data set.
+     * The tag cloud will be updated after the data set is changed.
+     *
+     * @param tagArrayList the new data set of tags
+     *
+     * @see         Tag
+     */
+    public void setData (ArrayList<Tag> tagArrayList) {
+        this.tagArrayList = tagArrayList;
+        updateTags();
     }
 
-    public void setData (HashMap<String, Integer> data) {
-        this.data = data;
-    }
-
+    /**
+     * Set the wanted max font size of the tag cloud.
+     * The tag cloud will be updated.
+     *
+     * @param maxFontSize The wanted maximum text size.
+     */
     public void setMaxFontSize (int maxFontSize) {
         this.maxFontSize = maxFontSize;
         updateTags();
     }
 
+    /**
+     * Set the wanted min font size of the tag cloud.
+     * The tag cloud will be updated.
+     *
+     * @param minFontSize The wanted minimum text size.
+     */
     public void setMinFontSize (int minFontSize) {
         this.minFontSize = minFontSize;
         updateTags();
     }
 
-    public void addTag (String s, int i) {
-        data.put(s,i);
+    /**
+     * Set the wanted padding for the tags.
+     * The tag cloud will be updated.
+     *
+     * @param t Top padding
+     * @param r Right padding
+     * @param b Bottom padding
+     * @param l Left padding
+     */
+    public void setTagPadding (int t, int r, int b, int l) {
+        this.tagPaddingTop = t;
+        this.tagPaddingRight = r;
+        this.tagPaddingBottom = b;
+        this.tagPaddingLeft = l;
         updateTags();
     }
 
+    /**
+     * Add a new tag to the data set.
+     * The tag cloud will be updated.
+     *
+     * @param t The new tag to be added to the data set
+     */
+    public void addTag (Tag t) {
+        tagArrayList.add(t);
+        updateTags();
+    }
+
+    /**
+     * Get max count value of the tag cloud data set.
+     *
+     * @return Max value of the count values of the tags.
+     */
     private double getMax() {
-        Collection<Integer> c = data.values();
-        return Collections.max(c);
+        Tag t = Collections.max(tagArrayList);
+        return t.getCount();
 
     }
 
+    /**
+     * Get min count value of the tag cloud data set.
+     *
+     * @return Min value of the count values of the tags.
+     */
     private double getMin() {
-        Collection<Integer> c = data.values();
-        return Collections.min(c);
+        Tag t = Collections.min(tagArrayList);
+        return t.getCount();
     }
 
+    /**
+     * Get the appropriate text size depending on the count of the total data set.
+     * This is to get a weighted font size between wanted maximum and minimum wanted text size.
+     *
+     * @param value The count value of the specified tag
+     * @return The text size of the specified tag
+     */
     private int getTagTextSize (int value) {
         double norm = (value - getMin()) / (getMax() - getMin());
         double size = (minFontSize*(1-norm)) + norm*maxFontSize;
         return (int) size;
     }
-
-
-    /*
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-    }*/
 }
