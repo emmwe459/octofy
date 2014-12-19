@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * Test program for TDDC73 Interaktionsprogrammering 2014
+ */
 public class MainActivity extends Activity {
 
     TextView header;
@@ -25,35 +28,53 @@ public class MainActivity extends Activity {
 
         // header
         header = (TextView) findViewById(R.id.header);
-        header.setText("The Rorschach carousel!");
-        header.setTextColor(Color.BLUE);
+
+        // Create the data used by the carousel and the tag cloud
+        createData();
+
+        // set up for tag cloud
+        tagCloud = (TagCloud) findViewById(R.id.tagcloud);
+        tagCloud.setData(tagList);
         
+        // set up for carousel
+        carousel = (Carousel) findViewById(R.id.carousel);
+        carousel.setData(tags, counts, img_paths);
+
+        //Possible edits on the tag cloud (not necessary in order to run program)
+        tagCloud.addTag(new Tag("Grizzlybears", 1, Color.CYAN));
+        tagCloud.setMinFontSize(10);
+        tagCloud.setMaxFontSize(32);
+        tagCloud.setTagPadding(2,7,2,7);
+    }
+
+    private void createData() {
+
         // tag names
         tags = new String[]{
-        		"Blue seastar",
-        		"Orange flower",
-        		"Green seastar",
-        		"Blue-yellow flower",
+                "Blue seastar",
+                "Orange flower",
+                "Green seastar",
+                "Blue-yellow flower",
                 "Yellow seastar",
                 "Red-yellow flower",
                 "Purple seastar",
                 "Green flower",
                 "Pink seastar",
                 "Super orange flower" };
-        
+
         // tag counters, i.e. how many times the image corresponding to the tag has been clicked in the carousel
         counts = new int[]{
-        		3,
-        		5,
-        		11,
-        		7,
-        		3,
-        		1,
-        		5,
-        		10,
-        		8,
-        		5 };
-        
+                3,
+                5,
+                11,
+                7,
+                3,
+                1,
+                5,
+                10,
+                8,
+                5 };
+
         // names for the image corresponding to each tag
         img_paths = new String[]{
                 "sea_star1_blue",
@@ -77,19 +98,5 @@ public class MainActivity extends Activity {
                 tagList.add(new Tag(tags[i],counts[i]));
             }
         }
-
-        // set up for tag cloud
-        tagCloud = (TagCloud) findViewById(R.id.tagcloud);
-        tagCloud.setData(tagList);
-        
-        // set up for carousel
-        carousel = (Carousel) findViewById(R.id.carousel);
-        carousel.setData(tags, counts, img_paths);
-
-        //Possible edits on the tag cloud
-        tagCloud.addTag(new Tag("Grizzlybears", 1, Color.CYAN));
-        tagCloud.setMinFontSize(10);
-        tagCloud.setMaxFontSize(32);
-        tagCloud.setTagPadding(2,7,2,7);
     }
 }
