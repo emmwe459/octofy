@@ -3,7 +3,6 @@ package com.example.octofy;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -42,17 +41,19 @@ public class Carousel extends LinearLayout {
 	 * Also, OnClickListeners are set for the buttons. 
 	 */
     private void init() {
-        carouselList = (CarouselList) findViewById(R.id.carousel_list);
+    	
+    	// set the first image (with index 0) to be the one showing leftmost in the carousel list
+        browsingIndex = 0;
+        
         button_left = (Button) findViewById(R.id.goLeft);
         button_left.setEnabled(false);
         button_right = (Button) findViewById(R.id.goRight);
 
         carouselAdapter = new CarouselAdapter(context, numOfImagesToShow);
-
+        
+        carouselList = (CarouselList) findViewById(R.id.carousel_list);
+        carouselList.setAdapter(carouselAdapter);
         carouselList.setNumOfImagesToShow(numOfImagesToShow);
-
-        // set the first image (index 0) to be the one showing leftmost in the carousel list
-        browsingIndex = 0;
 
         // OnClickListener on button for browsing left in the carousel list
         button_left.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +70,7 @@ public class Carousel extends LinearLayout {
                         button_right.setBackgroundResource(R.drawable.right_arrow);
                     }
 
-                    carouselAdapter.stepLeft();
+                    carouselAdapter.browseLeft();
                     carouselList.setAdapter(carouselAdapter);
 
                     if(browsingIndex == 0) {
@@ -97,7 +98,7 @@ public class Carousel extends LinearLayout {
                         button_left.setBackgroundResource(R.drawable.left_arrow);
                     }
 
-                    carouselAdapter.stepRight();
+                    carouselAdapter.browseRight();
                     carouselList.setAdapter(carouselAdapter);
 
                     if(browsingIndex == carouselAdapter.getTotLength() - numOfImagesToShow) {
@@ -113,22 +114,14 @@ public class Carousel extends LinearLayout {
     }
 
     /**
-     * Returns an Image object that can then be painted on the screen. 
-     * The url argument must specify an absolute {@link URL}. The name
-     * argument is a specifier that is relative to the url argument. 
-     * <p>
-     * This method always returns immediately, whether or not the 
-     * image exists. When this applet attempts to draw the image on
-     * the screen, the data will be loaded. The graphics primitives 
-     * that draw the image will incrementally paint on the screen. 
+     * Calls method setTagData in CarouselAdapter to set tag data for the carousel. 
      *
-     * @param  url  an absolute URL giving the base location of the image
-     * @param  name the location of the image, relative to the url argument
-     * @return      the image at the specified URL
-     * @see         Image
+     * @param  tags  array with tag names
+     * @param  counts array with tag counts
+     * @param  img_paths paths to corresponding tag images, assumed to be in res/drawable
      */
-    public void setData(String[] s, int[] i, String[] j) {
-        carouselAdapter.setData(s,i, j);
-        carouselList.setAdapter(carouselAdapter);
+    public void setData(String[] tags, int[] counts, String[] img_paths) {
+        carouselAdapter.setTagData(tags,counts, img_paths);
+        carouselAdapter.notifyDataSetChanged();
     }
 }

@@ -13,25 +13,38 @@ import android.widget.Toast;
 
 public class CarouselAdapter extends BaseAdapter {
 	
-	private Context _context;
-	private String[] tags, img_paths;
+	private Context context;
+	private String[] tags, imgPaths, subTags, subImgPaths;
 	private int[] counts;
-    int firstIndex;
-    private String[] subTags, subPaths;
-    private int[] subCount;
-    private int numOfImagesToShow;
+    private int firstIndex, numOfImagesToShow;
 	
-	public CarouselAdapter(Context applicationContext, int num) {
-		_context = applicationContext;
-		numOfImagesToShow = num;
+	public CarouselAdapter(Context context, int numOfImagesToShow) {
+		this.context = context;
+		this.numOfImagesToShow = numOfImagesToShow;
 	}
+	
+	/**
+     * Sets tag data for the carousel. 
+     *
+     * @param  tags array with tag names
+     * @param  counts array with tag counts
+     * @param  img_paths paths to corresponding tag images, assumed to be in res/drawable
+     */
+	public void setTagData(String[] tags, int[] counts, String[] imgPaths) {
+        this.tags = tags;
+        this.counts = counts;
+        this.imgPaths = imgPaths;
+        init();
+    }
 
+	/**
+	 * Inits values for adapter.
+	 * This includes creating sub array with tag names and sub array with image paths. 
+	 */
 	private void init() {
-
         firstIndex = 0;
         subTags = Arrays.copyOfRange(tags,firstIndex,firstIndex+numOfImagesToShow);
-        subPaths = Arrays.copyOfRange(img_paths,firstIndex,firstIndex+numOfImagesToShow);
-        subCount = Arrays.copyOfRange(counts,firstIndex,firstIndex+numOfImagesToShow);
+        subImgPaths = Arrays.copyOfRange(imgPaths,firstIndex,firstIndex+numOfImagesToShow);
 	}
 
 	@Override
@@ -39,6 +52,11 @@ public class CarouselAdapter extends BaseAdapter {
         return subTags.length;
 	}
 	
+	/**
+	 * Returns the length of the original tag name list.
+	 * 
+	 * @return the length of the original tag name list
+	 */
 	public int getTotLength() {
 		return tags.length;
 	}
@@ -55,9 +73,9 @@ public class CarouselAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
-		View view = LayoutInflater.from(_context).inflate(R.layout.carousel_item, null);
+		View view = LayoutInflater.from(context).inflate(R.layout.carousel_item, null);
         Resources resources = parent.getContext().getResources();
-        final int resourceId = resources.getIdentifier(subPaths[position], "drawable",
+        final int resourceId = resources.getIdentifier(subImgPaths[position], "drawable",
            parent.getContext().getPackageName());
         view.setBackgroundResource(resourceId);
         
@@ -85,32 +103,39 @@ public class CarouselAdapter extends BaseAdapter {
         return view;
 	}
 
-    private void setFirstIndex ( int firstIndex ) {
+	/**
+	 * Updates the tag object with firstIndex to be at the leftmost in the carousel list.
+	 * 
+	 * @param firstIndex index for the tag object to be at the leftmost
+	 */
+    private void setFirstIndex (int firstIndex) {
         this.firstIndex = firstIndex;
     }
 
-    private void setSubs() {
+    /**
+     * Updates sub arrays.
+     */
+    private void setSubArrays() {
         if(firstIndex >= 0 && firstIndex+numOfImagesToShow <= tags.length) {
             subTags = Arrays.copyOfRange(tags, firstIndex, firstIndex + numOfImagesToShow);
-            subPaths = Arrays.copyOfRange(img_paths, firstIndex, firstIndex + numOfImagesToShow);
-            subCount = Arrays.copyOfRange(counts, firstIndex, firstIndex + numOfImagesToShow);
+            subImgPaths = Arrays.copyOfRange(imgPaths, firstIndex, firstIndex + numOfImagesToShow);
         }
     }
 
-    public void stepRight () {
+    /**
+     * Called when right button is clicked, to browse to the right in the carousel list. The first index is therefore increased by 1.
+     */
+    public void browseRight () {
         setFirstIndex(firstIndex+1);
-        setSubs();
+        setSubArrays();
     }
 
-    public void stepLeft () {
+    /**
+     * Called when left button is clicked, to browse to the left in the carousel list. The first index is therefore decreased by 1.
+     */
+    public void browseLeft () {
         setFirstIndex(firstIndex-1);
-        setSubs();
+        setSubArrays();
     }
-
-    public void setData(String[] s, int[] i, String[] j) {
-        tags = s;
-        counts = i;
-        img_paths = j;
-        init();
-    }
+    
 }
