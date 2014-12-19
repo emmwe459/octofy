@@ -92,7 +92,6 @@ public class Carousel extends LinearLayout {
         
         carouselList = (CarouselList) findViewById(R.id.carousel_list);
         carouselList.setAdapter(carouselAdapter);
-        carouselList.setNumOfImagesToShow(numOfImagesToShow);
 
         // OnClickListener on button for browsing left in the carousel list
         button_left.setOnClickListener(new View.OnClickListener() {
