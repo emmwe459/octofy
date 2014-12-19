@@ -179,7 +179,7 @@ public class CarouselAdapter extends BaseAdapter {
      * @return first index
      */
     public int getFirstIndex() {
-    	return firstIndex;
+    	return browseIndex;
     }
 
     /**
