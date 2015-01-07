@@ -1,13 +1,13 @@
 package com.example.octofy;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by linneanabo on 2015-01-05.
@@ -22,19 +22,33 @@ public class CustomCarouselAdapter extends CarouselAdapter {
      */
 
     Context context;
-    int numOfImagesToShow;
+    //int numOfImagesToShow;
 
     public CustomCarouselAdapter(Context context, int numOfImagesToShow) {
         super(context, numOfImagesToShow);
+
+        //this.context = context;
+    }
+
+    public CustomCarouselAdapter(Context context, int numOfImagesToShow, ArrayList<Tag> objects) {
+        super(context, numOfImagesToShow, objects);
+
+        //this.context = context;
+    }
+
+    @Override
+    public int getCount() {
+        return subObjects.size();//subTags.length;
     }
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.carousel_item, null);
-        /*
+        final Tag currentTag = getItem(position);//subObjects.get(browsePosition);
+
         Resources resources = parent.getContext().getResources();
-        final int resourceId = resources.getIdentifier(subImgPaths[position], "drawable",
+        final int resourceId = resources.getIdentifier(currentTag.getImgPath(), "drawable",
                 parent.getContext().getPackageName());
         view.setBackgroundResource(resourceId);
 
@@ -43,9 +57,9 @@ public class CustomCarouselAdapter extends CarouselAdapter {
             @Override
             public void onClick(View v) {
                 // Increase count for tag
-                counts[position+browseIndex]++;
-                String message = subTags[position] + " has " + Integer.toString(counts[position+browseIndex]);
-                if(counts[position+browseIndex] == 1) {
+                currentTag.setCount(currentTag.getCount() + 1);
+                String message = currentTag.getText()+ " has " + Integer.toString(currentTag.getCount());
+                if(currentTag.getCount() == 1) {
                     message += " vote!";
                 } else {
                     message += " votes!";
@@ -56,10 +70,6 @@ public class CustomCarouselAdapter extends CarouselAdapter {
 
         });
 
-        TextView title = (TextView) view.findViewById(R.id.title);
-        title.setText(tags[position+browseIndex]);
-
-        return view;*/
         return view;
     }
 }

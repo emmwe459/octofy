@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+
 /**
  * <h1>Carousel</h1>
  * Carousel is an extended LinearLayout, built to display a set of images.
@@ -70,8 +72,6 @@ public class Carousel extends LinearLayout {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.carousel, this, true);
 
-        // initiating values for the carousel object
-        init();
 	}
 	
 	/**
@@ -88,8 +88,6 @@ public class Carousel extends LinearLayout {
         button_left.setEnabled(false);
         button_right = (Button) findViewById(R.id.goRight);
 
-        carouselAdapter = new CarouselAdapter(context, numOfImagesToShow);
-        
         carouselList = (CarouselList) findViewById(R.id.carousel_list);
         carouselList.setAdapter(carouselAdapter);
 
@@ -154,12 +152,19 @@ public class Carousel extends LinearLayout {
     /**
      * Calls method setTagData in CarouselAdapter to set tag data for the carousel. 
      *
-     * @param  tags  array with tag names
-     * @param  counts array with tag counts
-     * @param  img_paths paths to corresponding tag images, assumed to be in res/drawable
+     * @param  tags  carouselTagList
      */
-    public void setData(String[] tags, int[] counts, String[] img_paths) {
-        carouselAdapter.setTagData(tags,counts, img_paths);
+    public void setData(ArrayList<Tag> carouselTagList) {
+
+        carouselAdapter = new CarouselAdapter(context, numOfImagesToShow, carouselTagList);
+        carouselAdapter.setTagData(carouselTagList);
         carouselAdapter.notifyDataSetChanged();
+
+        // initiating values for the carousel object
+        init();
+    }
+
+    public void setAdapter(CarouselAdapter carouselAdapter) {
+        this.carouselAdapter = carouselAdapter;
     }
 }

@@ -30,39 +30,12 @@ public class CarouselAdapter extends BaseAdapter {
     ArrayList<Tag> objects;
     ArrayList<Tag> subObjects;
 
-    public void setObjects(ArrayList<Tag> objects) {
-        this.objects = objects;
-    }
-
-    /**
-     * String of tags corresponding to each image.
-     */
-	private String[] tags;
-    /**
-     * Image paths to all images;
-     */
-    private String[] imgPaths;
-
-
-
-    /**
-     * Subarray of the tag array, containing numOfImagesToShow number of tags.
-     */
-    //private String[] subTags;
-    /**
-     * Subarray of the image path array, containing numOfImagesToShow number of paths.
-     */
-    //private String[] subImgPaths;
-
-    /**
-     * Array containing all the counts of the images,
-     * in this case denoting number of clicks on the image.
-     */
-	private int[] counts;
     /**
      * Index denoting the leftmost displayed image in the whole array.
      */
     private int browseIndex;
+    int browsePosition;
+
     /**
      * The number of images that should be shown at one time.
      */
@@ -74,37 +47,31 @@ public class CarouselAdapter extends BaseAdapter {
      * @param context Context
      * @param numOfImagesToShow The number of images that should be shown at one time.
      */
-	public CarouselAdapter(Context context, int numOfImagesToShow) {
+    public CarouselAdapter(Context context, int numOfImagesToShow) {
+        this.context = context;
+        this.numOfImagesToShow = numOfImagesToShow;
+    }
+
+    /**
+     * Public class constructor.
+     *
+     * @param context Context
+     * @param numOfImagesToShow The number of images that should be shown at one time.
+     */
+	public CarouselAdapter(Context context, int numOfImagesToShow, ArrayList<Tag> objects) {
 		this.context = context;
 		this.numOfImagesToShow = numOfImagesToShow;
-
-        //Testarray:
-        ArrayList<Tag> tagArrayList = new ArrayList<Tag>();
-        tagArrayList.add(new Tag("test",1));
-        tagArrayList.add(new Tag("quest",1));
-        tagArrayList.add(new Tag("quest",1));
-        tagArrayList.add(new Tag("quest",1));
-        tagArrayList.add(new Tag("quest",1));
-        tagArrayList.add(new Tag("quest",1));
-        tagArrayList.add(new Tag("quest",1));
-        tagArrayList.add(new Tag("quest",1));
-        tagArrayList.add(new Tag("quest",1));
-        tagArrayList.add(new Tag("quest",1));
-        setObjects(tagArrayList);
+        this.objects = objects;
 	}
 	
 	/**
      * Sets tag data for the carousel. 
      *
-     * @param  tags array with tag names
-     * @param  counts array with tag counts
-     * @param  imgPaths paths to corresponding tag images, assumed to be in res/drawable
+     * @param  objects The arraylist with what should be shown in the carousel
      */
-	public void setTagData(String[] tags, int[] counts, String[] imgPaths) {
+	public void setTagData(ArrayList<Tag> objects) {
 
-        this.tags = tags;
-        this.counts = counts;
-        this.imgPaths = imgPaths;
+        this.objects = objects;
         init();
     }
 
@@ -114,8 +81,6 @@ public class CarouselAdapter extends BaseAdapter {
 	 */
 	private void init() {
         browseIndex = 0;
-        //subTags = Arrays.copyOfRange(tags,browseIndex,browseIndex+numOfImagesToShow);
-        //subImgPaths = Arrays.copyOfRange(imgPaths,browseIndex,browseIndex+numOfImagesToShow);
         setSubArrays();
 	}
 	
@@ -129,7 +94,7 @@ public class CarouselAdapter extends BaseAdapter {
      */
 	@Override
 	public int getCount() {
-        return subObjects.size();//subTags.length;
+        return numOfImagesToShow;
 	}
 	
 	/**
@@ -139,12 +104,11 @@ public class CarouselAdapter extends BaseAdapter {
 	 */
 	public int getTotLength() {
 		return objects.size();
-                //tags.length;
 	}
 
 	@Override
-	public Object getItem(int position) {
-		return null;
+	public Tag getItem(int position) {
+        return objects.get(position+browseIndex);
 	}
 
 	@Override
@@ -164,11 +128,22 @@ public class CarouselAdapter extends BaseAdapter {
      */
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
+
+        View v;
+        if(convertView == null) {
+            v = new View(context);
+        } else
+            v = convertView;
+
+        return v;
+
+        /*
+
 		View view = LayoutInflater.from(context).inflate(R.layout.carousel_item, null);
 
-        final int place = position+browseIndex;
+        browsePosition = position+browseIndex;
         Resources resources = parent.getContext().getResources();
-        final int resourceId = resources.getIdentifier(imgPaths[place], "drawable",
+        final int resourceId = resources.getIdentifier(imgPaths[browsePosition], "drawable",
            parent.getContext().getPackageName());
         view.setBackgroundResource(resourceId);
         
@@ -178,8 +153,8 @@ public class CarouselAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				// Increase count for tag
 				counts[position+browseIndex]++;
-				String message = tags[position+browseIndex] + " has " + Integer.toString(counts[place]);
-				if(counts[place] == 1) {
+				String message = tags[position+browseIndex] + " has " + Integer.toString(counts[browsePosition]);
+				if(counts[browsePosition] == 1) {
 					message += " vote!";
 				} else {
 					message += " votes!";
@@ -193,7 +168,7 @@ public class CarouselAdapter extends BaseAdapter {
         TextView title = (TextView) view.findViewById(R.id.title);
         title.setText("some text");//tags[place]);
         
-        return view;
+        return view;*/
 	}
 
 	/**

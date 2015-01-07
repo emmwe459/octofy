@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
 
     TextView header;
 
-    private Carousel carousel;
+    private Carousel carousel, carousel2;
     public String[] tags, img_paths;
     public int[] counts;
 
@@ -38,8 +38,17 @@ public class MainActivity extends Activity {
         tagCloud.setData(tagList);
         
         // set up for carousel
-        carousel = (Carousel) findViewById(R.id.carousel);
-        carousel.setData(tags, counts, img_paths);
+        //carousel = (Carousel) findViewById(R.id.carousel);
+        //carousel.setData(tags, counts, img_paths);
+        //CarouselAdapter carouselAdapter = new CarouselAdapter(this,4);
+        //carousel.setAdapter(carouselAdapter);
+
+        // set up for carousel
+        carousel2 = (Carousel) findViewById(R.id.carousel2);
+        carousel2.setData(carouselTagList);
+        CustomCarouselAdapter customCarouselAdapter = new CustomCarouselAdapter(this, 4, carouselTagList);
+        carousel2.setAdapter(customCarouselAdapter);
+
 
         //Possible edits on the tag cloud (not necessary in order to run program)
         tagCloud.addTag(new Tag("Grizzlybears", 1, Color.CYAN));
@@ -91,7 +100,7 @@ public class MainActivity extends Activity {
 
         carouselTagList = new ArrayList<Tag>();
         for(int i = 0; i < tags.length; i++) {
-            //tagList.add(new Tag(tags[i],counts[i], img_paths[i]));
+            carouselTagList.add(new Tag(tags[i],counts[i], img_paths[i]));
         }
 
         // tag added to data for the tag cloud
