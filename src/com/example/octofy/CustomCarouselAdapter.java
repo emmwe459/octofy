@@ -18,34 +18,30 @@ public class CustomCarouselAdapter extends CarouselAdapter {
      * Public class constructor.
      *
      * @param context           Context
-     * @param numOfImagesToShow The number of images that should be shown at one time.
      */
 
     Context context;
-    //int numOfImagesToShow;
 
     public CustomCarouselAdapter(Context context, int numOfImagesToShow) {
         super(context, numOfImagesToShow);
-
-        //this.context = context;
+        this.context = context;
     }
 
     public CustomCarouselAdapter(Context context, int numOfImagesToShow, ArrayList<Tag> objects) {
         super(context, numOfImagesToShow, objects);
-
-        //this.context = context;
+        this.context = context;
     }
 
     @Override
     public int getCount() {
-        return subObjects.size();//subTags.length;
+        return super.getCount();
     }
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.carousel_item, null);
-        final Tag currentTag = getItem(position);//subObjects.get(browsePosition);
+        final Tag currentTag = getItem(position);
 
         Resources resources = parent.getContext().getResources();
         final int resourceId = resources.getIdentifier(currentTag.getImgPath(), "drawable",

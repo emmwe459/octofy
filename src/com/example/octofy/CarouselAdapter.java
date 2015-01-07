@@ -28,13 +28,11 @@ public class CarouselAdapter extends BaseAdapter {
 	private Context context;
 
     ArrayList<Tag> objects;
-    ArrayList<Tag> subObjects;
 
     /**
      * Index denoting the leftmost displayed image in the whole array.
      */
     private int browseIndex;
-    int browsePosition;
 
     /**
      * The number of images that should be shown at one time.
@@ -81,7 +79,6 @@ public class CarouselAdapter extends BaseAdapter {
 	 */
 	private void init() {
         browseIndex = 0;
-        setSubArrays();
 	}
 	
 	public int getNumOfImagesToShow() {
@@ -136,39 +133,6 @@ public class CarouselAdapter extends BaseAdapter {
             v = convertView;
 
         return v;
-
-        /*
-
-		View view = LayoutInflater.from(context).inflate(R.layout.carousel_item, null);
-
-        browsePosition = position+browseIndex;
-        Resources resources = parent.getContext().getResources();
-        final int resourceId = resources.getIdentifier(imgPaths[browsePosition], "drawable",
-           parent.getContext().getPackageName());
-        view.setBackgroundResource(resourceId);
-        
-		view.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// Increase count for tag
-				counts[position+browseIndex]++;
-				String message = tags[position+browseIndex] + " has " + Integer.toString(counts[browsePosition]);
-				if(counts[browsePosition] == 1) {
-					message += " vote!";
-				} else {
-					message += " votes!";
-				}
-				Toast toast = Toast.makeText(parent.getContext(), message, Toast.LENGTH_SHORT);
-				toast.show();
-			}
-			
-		});
-
-        TextView title = (TextView) view.findViewById(R.id.title);
-        title.setText("some text");//tags[place]);
-        
-        return view;*/
 	}
 
 	/**
@@ -190,28 +154,10 @@ public class CarouselAdapter extends BaseAdapter {
     }
 
     /**
-     * Updates sub arrays.
-     */
-    private void setSubArrays() {
-        //if(browseIndex >= 0 && browseIndex+numOfImagesToShow <= tags.length) {
-        if(browseIndex >= 0 && browseIndex+numOfImagesToShow <= objects.size()) {
-            //subTags = Arrays.copyOfRange(tags, browseIndex, browseIndex + numOfImagesToShow);
-            //subImgPaths = Arrays.copyOfRange(imgPaths, browseIndex, browseIndex + numOfImagesToShow);
-
-            subObjects = new ArrayList<Tag>();
-            for(int i = 0; i<numOfImagesToShow;i++) {
-                subObjects.add(objects.get(browseIndex+i));
-            }
-
-        }
-    }
-
-    /**
      * Called when right button is clicked, to browse to the right in the carousel list. The first index is therefore increased by 1.
      */
     public void browseRight () {
         setFirstIndex(browseIndex+1);
-        setSubArrays();
     }
 
     /**
@@ -219,7 +165,6 @@ public class CarouselAdapter extends BaseAdapter {
      */
     public void browseLeft () {
         setFirstIndex(browseIndex-1);
-        setSubArrays();
     }
     
 }
