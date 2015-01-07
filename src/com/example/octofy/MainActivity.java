@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
 
     TagCloud tagCloud;
     ArrayList<Tag> tagList;
+    ArrayList<Tag> carouselTagList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,11 @@ public class MainActivity extends Activity {
                 "flower4",
                 "sea_star1_pink",
                 "flower5" };
+
+        carouselTagList = new ArrayList<Tag>();
+        for(int i = 0; i < tags.length; i++) {
+            //tagList.add(new Tag(tags[i],counts[i], img_paths[i]));
+        }
 
         // tag added to data for the tag cloud
         tagList = new ArrayList<Tag>();

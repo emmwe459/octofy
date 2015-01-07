@@ -18,6 +18,10 @@ public class Tag implements Comparable<Tag> {
      */
     private int count;
     /**
+     * The image path to a tag
+     */
+    private String imgPath;
+    /**
      * The color of the tag, default value is black color.
      */
     private int color = Color.rgb(0,0,0); // default
@@ -31,6 +35,19 @@ public class Tag implements Comparable<Tag> {
     public Tag (String text, int count) {
         this.text = text;
         this.count = count;
+    }
+
+    /**
+     * Public class constructor.
+     *
+     * @param text The text of the tag.
+     * @param count The count  of the tag.
+     * @param imgPath The path of the tag image.
+     */
+    public Tag (String text, int count, String imgPath) {
+        this.text = text;
+        this.count = count;
+        this.imgPath = imgPath;
     }
 
     /**
@@ -68,6 +85,13 @@ public class Tag implements Comparable<Tag> {
     }
 
     /**
+     * @return The image path of the tag.
+     */
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    /**
      * @param text Text to set on the tag.
      */
     public void setText (String text) {
@@ -86,6 +110,13 @@ public class Tag implements Comparable<Tag> {
      */
     public void setColor (int color) {
         this.color = color;
+    }
+
+    /**
+     * @param imgPath Path to set on the image of the tag.
+     */
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
     }
 
     /**

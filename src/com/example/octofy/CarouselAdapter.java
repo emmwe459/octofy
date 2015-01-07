@@ -1,6 +1,8 @@
 package com.example.octofy;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -24,6 +26,14 @@ public class CarouselAdapter extends BaseAdapter {
      * Context
      */
 	private Context context;
+
+    ArrayList<Tag> objects;
+    ArrayList<Tag> subObjects;
+
+    public void setObjects(ArrayList<Tag> objects) {
+        this.objects = objects;
+    }
+
     /**
      * String of tags corresponding to each image.
      */
@@ -32,14 +42,17 @@ public class CarouselAdapter extends BaseAdapter {
      * Image paths to all images;
      */
     private String[] imgPaths;
+
+
+
     /**
      * Subarray of the tag array, containing numOfImagesToShow number of tags.
      */
-    private String[] subTags;
+    //private String[] subTags;
     /**
      * Subarray of the image path array, containing numOfImagesToShow number of paths.
      */
-    private String[] subImgPaths;
+    //private String[] subImgPaths;
 
     /**
      * Array containing all the counts of the images,
@@ -64,6 +77,20 @@ public class CarouselAdapter extends BaseAdapter {
 	public CarouselAdapter(Context context, int numOfImagesToShow) {
 		this.context = context;
 		this.numOfImagesToShow = numOfImagesToShow;
+
+        //Testarray:
+        ArrayList<Tag> tagArrayList = new ArrayList<Tag>();
+        tagArrayList.add(new Tag("test",1));
+        tagArrayList.add(new Tag("quest",1));
+        tagArrayList.add(new Tag("quest",1));
+        tagArrayList.add(new Tag("quest",1));
+        tagArrayList.add(new Tag("quest",1));
+        tagArrayList.add(new Tag("quest",1));
+        tagArrayList.add(new Tag("quest",1));
+        tagArrayList.add(new Tag("quest",1));
+        tagArrayList.add(new Tag("quest",1));
+        tagArrayList.add(new Tag("quest",1));
+        setObjects(tagArrayList);
 	}
 	
 	/**
@@ -74,6 +101,7 @@ public class CarouselAdapter extends BaseAdapter {
      * @param  imgPaths paths to corresponding tag images, assumed to be in res/drawable
      */
 	public void setTagData(String[] tags, int[] counts, String[] imgPaths) {
+
         this.tags = tags;
         this.counts = counts;
         this.imgPaths = imgPaths;
@@ -86,8 +114,9 @@ public class CarouselAdapter extends BaseAdapter {
 	 */
 	private void init() {
         browseIndex = 0;
-        subTags = Arrays.copyOfRange(tags,browseIndex,browseIndex+numOfImagesToShow);
-        subImgPaths = Arrays.copyOfRange(imgPaths,browseIndex,browseIndex+numOfImagesToShow);
+        //subTags = Arrays.copyOfRange(tags,browseIndex,browseIndex+numOfImagesToShow);
+        //subImgPaths = Arrays.copyOfRange(imgPaths,browseIndex,browseIndex+numOfImagesToShow);
+        setSubArrays();
 	}
 	
 	public int getNumOfImagesToShow() {
@@ -100,7 +129,7 @@ public class CarouselAdapter extends BaseAdapter {
      */
 	@Override
 	public int getCount() {
-        return subTags.length;
+        return subObjects.size();//subTags.length;
 	}
 	
 	/**
@@ -109,7 +138,8 @@ public class CarouselAdapter extends BaseAdapter {
 	 * @return the length of the original tag name list
 	 */
 	public int getTotLength() {
-		return tags.length;
+		return objects.size();
+                //tags.length;
 	}
 
 	@Override
@@ -135,8 +165,10 @@ public class CarouselAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		View view = LayoutInflater.from(context).inflate(R.layout.carousel_item, null);
+
+        final int place = position+browseIndex;
         Resources resources = parent.getContext().getResources();
-        final int resourceId = resources.getIdentifier(subImgPaths[position], "drawable",
+        final int resourceId = resources.getIdentifier(imgPaths[place], "drawable",
            parent.getContext().getPackageName());
         view.setBackgroundResource(resourceId);
         
@@ -146,8 +178,8 @@ public class CarouselAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				// Increase count for tag
 				counts[position+browseIndex]++;
-				String message = subTags[position] + " has " + Integer.toString(counts[position+browseIndex]);
-				if(counts[position+browseIndex] == 1) {
+				String message = tags[position+browseIndex] + " has " + Integer.toString(counts[place]);
+				if(counts[place] == 1) {
 					message += " vote!";
 				} else {
 					message += " votes!";
@@ -157,9 +189,9 @@ public class CarouselAdapter extends BaseAdapter {
 			}
 			
 		});
-		
+
         TextView title = (TextView) view.findViewById(R.id.title);
-        title.setText(tags[position+browseIndex]);
+        title.setText("some text");//tags[place]);
         
         return view;
 	}
@@ -186,9 +218,16 @@ public class CarouselAdapter extends BaseAdapter {
      * Updates sub arrays.
      */
     private void setSubArrays() {
-        if(browseIndex >= 0 && browseIndex+numOfImagesToShow <= tags.length) {
-            subTags = Arrays.copyOfRange(tags, browseIndex, browseIndex + numOfImagesToShow);
-            subImgPaths = Arrays.copyOfRange(imgPaths, browseIndex, browseIndex + numOfImagesToShow);
+        //if(browseIndex >= 0 && browseIndex+numOfImagesToShow <= tags.length) {
+        if(browseIndex >= 0 && browseIndex+numOfImagesToShow <= objects.size()) {
+            //subTags = Arrays.copyOfRange(tags, browseIndex, browseIndex + numOfImagesToShow);
+            //subImgPaths = Arrays.copyOfRange(imgPaths, browseIndex, browseIndex + numOfImagesToShow);
+
+            subObjects = new ArrayList<Tag>();
+            for(int i = 0; i<numOfImagesToShow;i++) {
+                subObjects.add(objects.get(browseIndex+i));
+            }
+
         }
     }
 
