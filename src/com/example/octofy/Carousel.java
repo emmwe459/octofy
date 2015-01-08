@@ -23,10 +23,6 @@ import java.util.ArrayList;
 public class Carousel extends LinearLayout {
 
     /**
-     * Context
-     */
-    private Context context;
-    /**
      * The list containing the images.
      */
     private CarouselList carouselList;
@@ -64,7 +60,6 @@ public class Carousel extends LinearLayout {
      */
 	public Carousel(Context context, AttributeSet attrs) {
 		super(context, attrs);
-        this.context = context;
 
         // retrieve number of images to show in the carousel, which can be set in file 'res/layout/activity_main.xml'
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Carousel);
@@ -77,9 +72,7 @@ public class Carousel extends LinearLayout {
 	}
 	
 	/**
-	 * Inits values for a carousel object.
-	 * This includes the horizontal list, buttons for browsing the list, a carousel adapter and number of images to show.
-	 * Also, OnClickListeners are set for the buttons. 
+	 * Inits buttons for browsing the list and sets OnClickListeners for these buttons. 
 	 */
     private void initButtons() {
     	
@@ -89,8 +82,6 @@ public class Carousel extends LinearLayout {
         button_left = (Button) findViewById(R.id.goLeft);
         button_left.setEnabled(false);
         button_right = (Button) findViewById(R.id.goRight);
-
-        carouselList.setAdapter(carouselAdapter);
 
         // OnClickListener on button for browsing left in the carousel list
         button_left.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +139,7 @@ public class Carousel extends LinearLayout {
     }
 
     /**
-     * Calls method setTagData in CarouselAdapter to set tag data for the carousel. 
+     * Sets data for the carousel. 
      *
      * @param  carouselTagList  List of Tag objects for the carousel
      */
@@ -157,6 +148,11 @@ public class Carousel extends LinearLayout {
         this.carouselTagList = carouselTagList;
     }
 
+    /**
+     * Sets the adapter for the carousel.
+     * 
+     * @param carouselAdapter Adapter to be used for the carousel
+     */
     public void setAdapter(CarouselAdapter carouselAdapter) {
         this.carouselAdapter = carouselAdapter;
         carouselAdapter.setNumOfImagesToShow(numOfImagesToShow);

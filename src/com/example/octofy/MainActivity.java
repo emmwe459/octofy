@@ -3,7 +3,6 @@ package com.example.octofy;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -12,23 +11,19 @@ import java.util.ArrayList;
  */
 public class MainActivity extends Activity {
 
-    TextView header;
-
-    private Carousel carousel, carousel2;
+    private Carousel carousel;
+    private CustomCarouselAdapter customCarouselAdapter;
     public String[] tags, img_paths;
     public int[] counts;
 
-    TagCloud tagCloud;
-    ArrayList<Tag> tagList;
-    ArrayList<Tag> carouselTagList;
+    private TagCloud tagCloud;
+    private ArrayList<Tag> tagList;
+    private ArrayList<Tag> carouselTagList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // header
-        header = (TextView) findViewById(R.id.header);
 
         // Create the data used by the carousel and the tag cloud
         createData();
@@ -38,17 +33,10 @@ public class MainActivity extends Activity {
         tagCloud.setData(tagList);
         
         // set up for carousel
-        //carousel = (Carousel) findViewById(R.id.carousel);
-        //carousel.setData(tags, counts, img_paths);
-        //CarouselAdapter carouselAdapter = new CarouselAdapter(this,4);
-        //carousel.setAdapter(carouselAdapter);
-
-        // set up for carousel
-        carousel2 = (Carousel) findViewById(R.id.carousel2);
-        carousel2.setData(carouselTagList);
-        CustomCarouselAdapter customCarouselAdapter = new CustomCarouselAdapter(this);
-        carousel2.setAdapter(customCarouselAdapter);
-
+        carousel = (Carousel) findViewById(R.id.carousel);
+        carousel.setData(carouselTagList);
+        customCarouselAdapter = new CustomCarouselAdapter(this);
+        carousel.setAdapter(customCarouselAdapter);
 
         //Possible edits on the tag cloud (not necessary in order to run program)
         tagCloud.addTag(new Tag("Grizzlybears", 1, Color.CYAN));
@@ -98,20 +86,25 @@ public class MainActivity extends Activity {
                 "sea_star1_pink",
                 "flower5" };
 
+        // tag added to data for the carousel
         carouselTagList = new ArrayList<Tag>();
+        
+        // initiating data for carousel
         for(int i = 0; i < tags.length; i++) {
-            carouselTagList.add(new Tag(tags[i],counts[i], img_paths[i]));
+            carouselTagList.add(new Tag(tags[i], counts[i], img_paths[i]));
         }
 
         // tag added to data for the tag cloud
         tagList = new ArrayList<Tag>();
+        
         // initiating data for tag cloud, every other is purple (just for fun!)
         for(int i = 0; i < tags.length; i++) {
             if (i%3 == 0) {
-                tagList.add(new Tag(tags[i],counts[i], Color.rgb(148,0,211)));
+                tagList.add(new Tag(tags[i], counts[i], Color.rgb(148,0,211)));
             } else {
-                tagList.add(new Tag(tags[i],counts[i]));
+                tagList.add(new Tag(tags[i], counts[i]));
             }
         }
+        
     }
 }

@@ -7,19 +7,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
+/**
+ * <h1>CustomCarouselAdapter</h1>
+ * Adapter as example of how to make use of CarouselAdapter by extending it.
+ * 
+ * @see com.example.octofy.CarouselAdapter
+ */
 public class CustomCarouselAdapter extends CarouselAdapter {
 
+	/**
+     * Context.
+     */
+	private Context context;
+	
     /**
      * Public class constructor.
      *
      * @param context Context
-     *
-     */
-
-    Context context;
-
+     */    
     public CustomCarouselAdapter(Context context) {
         super(context);
         this.context = context;
