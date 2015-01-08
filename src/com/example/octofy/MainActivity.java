@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
         // set up for carousel
         carousel2 = (Carousel) findViewById(R.id.carousel2);
         carousel2.setData(carouselTagList);
-        CustomCarouselAdapter customCarouselAdapter = new CustomCarouselAdapter(this, 4, carouselTagList);
+        CustomCarouselAdapter customCarouselAdapter = new CustomCarouselAdapter(this);
         carousel2.setAdapter(customCarouselAdapter);
 
 

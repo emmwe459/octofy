@@ -20,13 +20,8 @@ public class CustomCarouselAdapter extends CarouselAdapter {
 
     Context context;
 
-    public CustomCarouselAdapter(Context context, int numOfImagesToShow) {
-        super(context, numOfImagesToShow);
-        this.context = context;
-    }
-
-    public CustomCarouselAdapter(Context context, int numOfImagesToShow, ArrayList<Tag> objects) {
-        super(context, numOfImagesToShow, objects);
+    public CustomCarouselAdapter(Context context) {
+        super(context);
         this.context = context;
     }
 

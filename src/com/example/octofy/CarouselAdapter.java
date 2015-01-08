@@ -27,6 +27,9 @@ public class CarouselAdapter extends BaseAdapter {
      */
 	private Context context;
 
+    /**
+     * List of objects to be displayed in the carousel
+     */
     ArrayList<Tag> objects;
 
     /**
@@ -38,6 +41,15 @@ public class CarouselAdapter extends BaseAdapter {
      * The number of images that should be shown at one time.
      */
     private int numOfImagesToShow;
+
+    /**
+     * Public class constructor
+     *
+     * @param context Context
+     */
+    public CarouselAdapter(Context context) {
+        this.context = context;
+    }
 
     /**
      * Public class constructor.
@@ -79,14 +91,28 @@ public class CarouselAdapter extends BaseAdapter {
 	private void init() {
         browseIndex = 0;
 	}
-	
+
+    /**
+     * Set number of images to show
+     *
+     * @param numOfImagesToShow
+     */
+    public void setNumOfImagesToShow(int numOfImagesToShow) {
+        this.numOfImagesToShow = numOfImagesToShow;
+    }
+
+    /**
+     * Get number of images to show
+     *
+     * @return numOfImagesToShow
+     */
 	public int getNumOfImagesToShow() {
 		return numOfImagesToShow;
 	}
 
     /**
-     * Get the length of the subarray to show at once.
-     * @return length of the subarray
+     * Get the length of the number of images to show at once in the carousel
+     * @return numOfImagesToShow
      */
 	@Override
 	public int getCount() {
@@ -102,6 +128,11 @@ public class CarouselAdapter extends BaseAdapter {
 		return objects.size();
 	}
 
+    /**
+     * Returns the object that should be drawn in the view, depending on position and browsing index.
+     * @param position
+     * @return The object that should be used in the view
+     */
 	@Override
 	public Tag getItem(int position) {
         return objects.get(position+browseIndex);

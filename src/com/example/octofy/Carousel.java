@@ -54,6 +54,8 @@ public class Carousel extends LinearLayout {
      */
     private int browsingIndex;
 
+    ArrayList<Tag> carouselTagList;
+
     /**
      * Public class constructor.
      *
@@ -79,7 +81,7 @@ public class Carousel extends LinearLayout {
 	 * This includes the horizontal list, buttons for browsing the list, a carousel adapter and number of images to show.
 	 * Also, OnClickListeners are set for the buttons. 
 	 */
-    private void init() {
+    private void initButtons() {
     	
     	// set the first image (with index 0) to be the one showing leftmost in the carousel list
         browsingIndex = 0;
@@ -88,7 +90,6 @@ public class Carousel extends LinearLayout {
         button_left.setEnabled(false);
         button_right = (Button) findViewById(R.id.goRight);
 
-        carouselList = (CarouselList) findViewById(R.id.carousel_list);
         carouselList.setAdapter(carouselAdapter);
 
         // OnClickListener on button for browsing left in the carousel list
@@ -115,7 +116,6 @@ public class Carousel extends LinearLayout {
                     }
 
                 }
-
             }
         });
 
@@ -143,29 +143,26 @@ public class Carousel extends LinearLayout {
                     }
 
                 }
-
             }
         });
-        
     }
 
     /**
      * Calls method setTagData in CarouselAdapter to set tag data for the carousel. 
      *
-     * @param  tags  carouselTagList
+     * @param  carouselTagList  List of Tag objects for the carousel
      */
     public void setData(ArrayList<Tag> carouselTagList) {
 
-        carouselAdapter = new CarouselAdapter(context, numOfImagesToShow, carouselTagList);
-        carouselAdapter.setTagData(carouselTagList);
-        carouselAdapter.notifyDataSetChanged();
-
-        // initiating values for the carousel object
-        init();
+        this.carouselTagList = carouselTagList;
     }
 
     public void setAdapter(CarouselAdapter carouselAdapter) {
         this.carouselAdapter = carouselAdapter;
+        carouselAdapter.setNumOfImagesToShow(numOfImagesToShow);
+        carouselAdapter.setTagData(carouselTagList);
+        carouselList = (CarouselList) findViewById(R.id.carousel_list);
         carouselList.setAdapter(carouselAdapter);
+        initButtons();
     }
 }
