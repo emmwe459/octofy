@@ -166,5 +166,6 @@ public class Carousel extends LinearLayout {
 
     public void setAdapter(CarouselAdapter carouselAdapter) {
         this.carouselAdapter = carouselAdapter;
+        carouselList.setAdapter(carouselAdapter);
     }
 }

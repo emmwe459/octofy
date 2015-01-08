@@ -9,15 +9,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-/**
- * Created by linneanabo on 2015-01-05.
- */
 public class CustomCarouselAdapter extends CarouselAdapter {
 
     /**
      * Public class constructor.
      *
-     * @param context           Context
+     * @param context Context
+     *
      */
 
     Context context;
@@ -40,7 +38,13 @@ public class CustomCarouselAdapter extends CarouselAdapter {
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.carousel_item, null);
+        View view;
+        if(convertView == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.carousel_item, null);
+        } else {
+            view = convertView;
+        }
+
         final Tag currentTag = getItem(position);
 
         Resources resources = parent.getContext().getResources();

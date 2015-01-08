@@ -75,7 +75,6 @@ public class CarouselAdapter extends BaseAdapter {
 
 	/**
 	 * Inits values for adapter.
-	 * This includes creating sub array with tag names and sub array with image paths. 
 	 */
 	private void init() {
         browseIndex = 0;
